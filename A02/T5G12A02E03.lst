@@ -1,0 +1,201 @@
+; MAIN
+				;	@ /0000
+0000 0018		;	I JP MAIN 
+0002 0000		;	OUTPUT K /0000 ; SAIDA
+; LISTA DE CARACTERES DA 1A STRING
+0004 6566		;	STR1_WORD1 K /6566
+0006 6566		;	STR1_WORD2 K /6566
+0008 0000		;	STR1_WORD3 K /0000
+000a 0000		;	STR1_WORD4 K /0000
+000c 0000		;	STR1_WORD5 K /0000
+; LISTA DE CARACTERES DA 2A STRING
+000e 6567		;	STR2_WORD1 K /6567
+0010 6763		;	STR2_WORD2 K /6763
+0012 0000		;	STR2_WORD3 K /0000
+0014 0000		;	STR2_WORD4 K /0000
+0016 0000		;	STR2_WORD5 K /0000
+
+0018 3000		;	MAIN LV /0 ;FAZ NADA
+001a 8004		;	LD STR1_WORD1
+001c 9200		;	MM STRCMP_1
+001e 800e		;	LD STR2_WORD1
+0020 9202		;	MM STRCMP_2
+0022 a288		;	SC STRCMP
+0024 c024		;	END HM END
+
+
+
+; UNPACK
+; L??GICA DE UNPACK
+				;	@ /0600
+0600 0000		;	  UNPACK_1 $ =1 ;ENDERE??O DE B1   0
+				;	  UNPACK_1 $ =1 ;ENDERE??O DE B1
+0602 0000		;	  UNPACK_2 $ =1 ;ENDERE??O DE B2   0
+				;	  UNPACK_2 $ =1 ;ENDERE??O DE B2
+0604 0100		;	  UNPACK_CONST K /0100
+0606 9000		;	  UNPACK_CONST_STORE K /9000
+0608 ffff		;	  UNPACK_CONST_NEG   K /FFFF
+060a 0000		;	  UNPACK_AC $ =1   0
+				;	  UNPACK_AC $ =1
+060c 0000		;	  UNPACK_1_TMP $ =1   0
+				;	  UNPACK_1_TMP $ =1
+060e 0000		;	  UNPACK_2_TMP $ =1    0
+				;	  UNPACK_2_TMP $ =1 
+  
+0610 0000		;	UNPACK $ =1   0
+				;	UNPACK $ =1
+0612 960a		;	  MM UNPACK_AC
+0614 6604		;	  *  UNPACK_CONST
+0616 7604		;	  /  UNPACK_CONST
+0618 960e		;	  MM UNPACK_2_TMP
+  
+061a 860a		;	  LD UNPACK_AC
+061c 560e		;	  -  UNPACK_2_TMP
+061e 7604		;	  /  UNPACK_CONST
+0620 960c		;	  MM UNPACK_1_TMP
+  
+; MUDAR OS ENDERE??OS INICIAIS
+0622 8600		;	  LD UNPACK_1
+0624 4606		;	  + UNPACK_CONST_STORE
+0626 962a		;	  MM UNPACK_STORE_1
+0628 860c		;	  LD UNPACK_1_TMP
+062a 0000		;	  UNPACK_STORE_1 $ =1   0
+				;	  UNPACK_STORE_1 $ =1
+062c 8602		;	  LD UNPACK_2
+062e 4606		;	  + UNPACK_CONST_STORE
+0630 9634		;	  MM UNPACK_STORE_2
+0632 860e		;	  LD UNPACK_2_TMP
+0634 0000		;	  UNPACK_STORE_2 $ =1   0
+				;	  UNPACK_STORE_2 $ =1
+  
+0636 b610		;	  RS UNPACK
+
+;========================================
+; STRCMP
+; -------
+; Parametros: 
+;     STRCMP_1 : String 1
+;     STRCMP_2 : String 2
+; AC = Tamanho da string igual
+; -------
+; Lembrando que cada instru????o ocupa 2 bytes
+; e cada char da string ocupa 1 byte, apenas
+; Sendo necess??rio o unpack.
+;========================================
+				;	@ /0200
+0200 0000		;		STRCMP_1 $ =1               ; Parametro 1   0
+				;		STRCMP_1 $ =1               ; Parametro 1
+0202 0000		;		STRCMP_2 $ =1               ; Parametro 2   0
+				;		STRCMP_2 $ =1               ; Parametro 2
+0204 0000		;		STRCMP_RET $ =1             ; Variavel de retorno   0
+				;		STRCMP_RET $ =1             ; Variavel de retorno
+0206 0000		;		STRCMP_CURRENT_1 $ =1       ; Valor dos 2 bytes atuais da string 1   0
+				;		STRCMP_CURRENT_1 $ =1       ; Valor dos 2 bytes atuais da string 1
+0208 0000		;		STRCMP_CURRENT_2 $ =1       ; Valor dos 2 bytes atuais da string 2   0
+				;		STRCMP_CURRENT_2 $ =1       ; Valor dos 2 bytes atuais da string 2
+020a 0001		;		STRCMP_CTE_1 K /1           ; Constante = 1
+020c 0002		;		STRCMP_CTE_2 K /2           ; Constante = 2
+020e 8000		;		STRCMP_CTE_LOAD K /8000     ; Constante = /8000 para load
+	
+				;	@ /0280
+0280 0000		;		STRCMP_CURRENT_1_UNPACKED_1 $ =1    ; Unpack1 da string1   0
+				;		STRCMP_CURRENT_1_UNPACKED_1 $ =1    ; Unpack1 da string1
+0282 0000		;		STRCMP_CURRENT_1_UNPACKED_2 $ =1    ; Unpack2 da string1   0
+				;		STRCMP_CURRENT_1_UNPACKED_2 $ =1    ; Unpack2 da string1
+0284 0000		;		STRCMP_CURRENT_2_UNPACKED_1 $ =1    ; Unpack1 da string2   0
+				;		STRCMP_CURRENT_2_UNPACKED_1 $ =1    ; Unpack1 da string2
+0286 0000		;		STRCMP_CURRENT_2_UNPACKED_2 $ =1    ; Unpack2 da string2   0
+				;		STRCMP_CURRENT_2_UNPACKED_2 $ =1    ; Unpack2 da string2
+
+; Inicio da fun????o
+0288 0000		;	STRCMP $ =1   0
+				;	STRCMP $ =1
+	; Retorno = 0
+028a 3000		;		LV /0
+028c 9204		;		MM STRCMP_RET
+	
+; Loop{
+028e 3000		;	STRCMP_LOOP_START LV /0 ; Faz nada
+	;
+	; Carrega e incrementa a posi????o da stirng1
+	;
+	; Carrega os bytes da string 1
+0290 8200		;		LD STRCMP_1
+0292 420e		;		+ STRCMP_CTE_LOAD
+0294 9296		;		MM STRCMP_LOAD_CURRENT_1
+				;	STRCMP_LOAD_CURRENT_1 $ =0
+0296 9206		;		MM STRCMP_CURRENT_1
+	; Incrementa a posicao da string 1
+0298 8200		;		LD STRCMP_1
+029a 420c		;		+ STRCMP_CTE_2
+029c 9200		;		MM STRCMP_1
+
+	;
+	; Carrega e incrementa a posi????o da stirng2
+	;
+	; Carrega os 2 bytes da string 2
+029e 8202		;		LD STRCMP_2
+02a0 420e		;		+ STRCMP_CTE_LOAD
+02a2 92a4		;		MM STRCMP_LOAD_CURRENT_2
+				;	STRCMP_LOAD_CURRENT_2 $ =0
+02a4 9208		;		MM STRCMP_CURRENT_2
+	; Incrementa a posicao da string 2
+02a6 8202		;		LD STRCMP_2
+02a8 420c		;		+ STRCMP_CTE_2
+02aa 9202		;		MM STRCMP_2
+	
+	; Faz o unpack da string 1  em STRCMP_CURRENT_1_UNPACKED_X
+02ac 8280		;		LD /0280
+02ae 9600		;		MM UNPACK_1
+02b0 8282		;		LD /0282
+02b2 9602		;		MM UNPACK_2
+02b4 8206		;		LD STRCMP_CURRENT_1
+02b6 a610		;		SC UNPACK
+	
+	; Faz o unpack da string 2 em STRCMP_CURRENT_2_UNPACKED_X
+02b8 8284		;		LD /0284
+02ba 9600		;		MM UNPACK_1
+02bc 8286		;		LD /0286
+02be 9602		;		MM UNPACK_2
+02c0 8208		;		LD STRCMP_CURRENT_2
+02c2 a610		;		SC UNPACK
+	
+	; Testa o primeiro byte
+02c4 8280		;	STRCMP_COMPARE_1 LD STRCMP_CURRENT_1_UNPACKED_1
+02c6 12ee		;		JZ STRCMP_RET_LABEL ; Se zero, acabou a string
+02c8 8284		;		LD STRCMP_CURRENT_2_UNPACKED_1
+02ca 12ee		;		JZ STRCMP_RET_LABEL ; Se zero, acabou a string
+02cc 5280		;		-  STRCMP_CURRENT_1_UNPACKED_1
+	; Checa se s??o iguais
+02ce 12d2		;		JZ STRCMP_EQUAL_1 
+02d0 02d8		;		JP STRCMP_COMPARE_2
+	
+; Primeiro byte igual
+02d2 8204		;	STRCMP_EQUAL_1 LD STRCMP_RET
+02d4 420a		;		+ STRCMP_CTE_1
+02d6 9204		;		MM STRCMP_RET
+	
+	; Compara o segundo byte
+02d8 8282		;	STRCMP_COMPARE_2 LD STRCMP_CURRENT_1_UNPACKED_2
+02da 12ee		;		JZ STRCMP_RET_LABEL ; Se zero, acabou a string
+02dc 8286		;		LD STRCMP_CURRENT_2_UNPACKED_2
+02de 12ee		;		JZ STRCMP_RET_LABEL ; Se zero, acabou a string
+02e0 5282		;		-  STRCMP_CURRENT_1_UNPACKED_2
+	; Checa se s??o iguais
+02e2 12e6		;		JZ STRCMP_EQUAL_2
+02e4 028e		;		JP STRCMP_LOOP_START
+	
+; Segundo byte igual
+02e6 8204		;	STRCMP_EQUAL_2 LD STRCMP_RET
+02e8 420a		;		+ STRCMP_CTE_1
+02ea 9204		;		MM STRCMP_RET
+	
+	; Continua o loop
+02ec 028e		;		JP STRCMP_LOOP_START
+	
+;} Fim do loop
+
+	; Label de retorno
+02ee 8204		;	STRCMP_RET_LABEL LD STRCMP_RET
+02f0 b288		;		RS STRCMP
+

@@ -1,0 +1,57 @@
+; exercício 3
+;
+0000 0016 ; inicio do programa principal
+0002 0000 ; variavel que guarda o valor da saída
+0004 0100 ; endereço do número a ser buscado
+0006 0001 ; INICIO da lista
+0008 0002
+000A 0003
+000C 0004
+000E 0001
+0010 0006
+0012 FFFF ; FIM da lista 
+0014 0006 ; variavel auxiliar: guarda o endereço do elemento da lista a ser lido
+
+;carregar o valor o elemento na variavel B da rotina igual(A, B)
+0016 8014 ; AC = OP[014];
+0018 9102 ; OP[102] = AC;
+001A A104 ; chamada para subrotina
+001C 1020 ; if(AC == 0), ou seja, se A == B, desvia
+001E 0026 ; senao ; proximo elemento
+0020 8002 ; AC = OP[002]
+0022 4200 ; AC = AC + 1;
+0024 9002 ; OP = AC;
+
+;logica de proximo elemento
+0026 8014 ; AC = OP[014];
+0028 4202 ; AC = AC + 2 ;
+002A 9014 ; OP[014] = AC;
+; se o proximo elemento for FFF, termina a leitura, senão, volta para 016
+002C 0016 ; executa 
+
+
+
+
+;subrotina igual(A,B)
+;
+; int igual(int A, int B) {
+;   if(A == B) {
+;     return 0;
+;   }
+;   else {
+;     return 1;
+;   }
+;
+; }
+0100 0001 ; variavel A - elemento a ser buscado
+0102 0000 ; variavel B
+0104 8100 ; carrega em AC o valor de A
+0106 5102 ; AC = AC - B
+0108 110E ; if(A != B) {
+010A 3001 ; AC = 1;
+010C B01C ; return AC; }
+010E 3000 ; else ; AC = 0
+0110 B01C ; return AC;
+
+0200 0001 ; variavel que guarda o quanto deve incrementar se achar um elemento igual
+0202 0002 ; passo do endereço da lista
