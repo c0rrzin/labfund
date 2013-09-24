@@ -13,7 +13,7 @@ Site da disciplina: http://disciplinas.stoa.usp.br/course/view.php?id=2332
 
 ### 1) Criar o branch do grupo:
 
-    git checkout -b TXXGYY
+    git checkout -b TXGYY
 
 Obs.: O branch **master** será usado para upload de arquivos e código gerais.
 
@@ -32,11 +32,11 @@ Exemplo:
 
     git add <file1> <file2>
     git commit -m "My awesome code"
-    git push origin TXXGYY
+    git push origin TXGYY
 
 ### 4) Baixar mudanças feitas por outros membros do grupo
 
-    git pull origin TXXGYY
+    git pull origin TXGYY
 
 ## Seja consicente. Não copie código, apenas se inspire :)
 
