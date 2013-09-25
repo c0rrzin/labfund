@@ -16,6 +16,7 @@ OBJ_DIR=obj
 
 # Cria os nomes dos objetos fontes 
 OBJS=$(SRCS:%.asm=$(OBJ_DIR)/%.mvn)
+LSTS=$(SRCS:%.asm=$(OBJ_DIR)/%.lst)
 
 # Algumas variaveis
 CURSPACES:="$(SPACES)"
@@ -23,6 +24,9 @@ SPACES:="$(CURSPACES)    "
 CP?=cp
 MV?=mv
 MKDIR?=mkdir -p
+
+# Sempre faz a limpeza
+.PHONY: clean
 
 # Exportação
 export SPACES
@@ -54,4 +58,9 @@ $(OBJ_DIR):
 
 # Alvo padrão
 all: $(OBJ_DIR) $(OUT)
+
+# Alvo padrão
+clean:
+	@echo "$(CURSPACES)Removendo $(LSTS) $(OBJS) $(OBJ_DIR)/$(OUT:.mvn=.run) $(OBJ_DIR)/link.mvn"
+	rm -f $(LSTS) $(OBJS) $(OBJ_DIR)/$(OUT:.mvn=.run) $(OBJ_DIR)/link.mvn
 

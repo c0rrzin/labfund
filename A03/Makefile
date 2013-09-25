@@ -15,12 +15,18 @@ MKDIR?=mkdir -p
 # Exporta o projeto
 export SPACES CP MV MKDIR
 
+# Limpa os objetos
+EXCERCISES_CLEAN:=$(EXCERCISES:=.clean)
+
 # Opções do make para sempre compilar certas coisas
-.PHONY: excercises $(EXCERCISES)
+.PHONY: clean excercises $(EXCERCISES) $(EXCERCISES_CLEAN)
 .SILENT: excercises $(EXCERCISES)
 
 # Alvo padrão
 all: excercises
+
+# Limpeza
+clean: $(EXCERCISES_CLEAN)
 
 # Compila os exercícios
 excercises: $(EXCERCISES)
@@ -29,3 +35,7 @@ excercises: $(EXCERCISES)
 $(EXCERCISES):
 	@echo "$(CURSPACES)Exercicio $@"
 	$(MAKE) -sC $@ all
+
+$(EXCERCISES_CLEAN): 
+	@echo "$(CURSPACES)Limpando exercicio $(basename $@)"
+	$(MAKE) -sC $(basename $@) clean
