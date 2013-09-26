@@ -4,12 +4,14 @@
 
 CONST_1 >
 CONST_2 >
+CONST_6 >
 CONST_A >
 CONST_10 >
 CONST_100 >
 CONST_1000 >
 CONST_LOAD >
 CONST_STORE >
+CONST_FFFF >
 CONST_H2A_0 >
 CONST_H2A_A >
 
@@ -19,12 +21,14 @@ CONST_H2A_A >
 ; Constantes numericas
 CONST_1      K /1
 CONST_2      K /2
+CONST_6      K /6
 CONST_A      K /A
 CONST_10     K /10
 CONST_100    K /100
 CONST_1000   K /1000
 CONST_LOAD   K /8000
 CONST_STORE  K /9000
+CONST_FFFF   K /FFFF
 
 ; Constantes para conversão Hex->Ascii
 CONST_H2A_0  K /30
