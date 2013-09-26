@@ -2,6 +2,7 @@
 ; Arquivo de rotinas
 ; -------
 ; Rotinas exportadas:
+;     CHTOUI
 ;     UITOCH
 ;     PACK
 ;     UNPACK
@@ -10,6 +11,9 @@
 ;========================================
 
 ; Nomes exportados
+CHTOUI >
+CHTOUI_1 >
+CHTOUI_2 >
 UITOCH >
 UITOCH_1 >
 UITOCH_2 >
@@ -34,17 +38,146 @@ UNPACK4_4 >
 ; Nomes importados
 CONST_1 <
 CONST_2 <
+CONST_6 <
 CONST_A <
 CONST_10 <
 CONST_100 <
 CONST_1000 <
 CONST_LOAD <
 CONST_STORE <
+CONST_FFFF <
 CONST_H2A_0 <
 CONST_H2A_A <
 
 ; Biblioteca
 & /0000
+
+
+; ===============
+; CHTOUI_SINGLE
+; ------
+; Parametros:
+;     AC: Caracter para hexa
+;     CHTOUI_SINGLE_INVALID_JP: Pulo caso seja inválido
+; Saidas:
+;     AC: Hexadecimal
+; ==============
+	CHTOUI_SINGLE_AC $ =1
+	CHTOUI_SINGLE_INVALID_JP $ =1
+CHTOUI_SINGLE $ =1
+	MM CHTOUI_SINGLE_AC
+
+	; Seta a instrução de inválido
+	LD CHTOUI_SINGLE_INVALID_JP
+	MM CHTOUI_SINGLE_INVALID_INSTRUCTION
+
+	; Verifica o intervalo do ASCII
+	; Inválido pois <0x30
+	LD CHTOUI_SINGLE_AC
+	- CONST_H2A_0
+	JN CHTOUI_SINGLE_INVALID_INSTRUCTION
+	; Entre 0x30 e 0x39
+	- CONST_A
+	JN CHTOUI_SINGLE_BETWEEN_0_9
+	; Inválido: Entre 0x3A e 0x3F
+	LD CHTOUI_SINGLE_AC
+	- CONST_H2A_A
+	JN CHTOUI_SINGLE_INVALID_INSTRUCTION
+	; Entre 0x41 e 0x46 (A a F)
+	- CONST_6
+	JN CHTOUI_SINGLE_BETWEEN_A_F
+
+	; Inválido
+	JP CHTOUI_SINGLE_INVALID_INSTRUCTION
+
+	; Entre 0x0 e 0x9
+	CHTOUI_SINGLE_BETWEEN_0_9 LD CHTOUI_SINGLE_AC
+	- CONST_H2A_0
+	RS CHTOUI_SINGLE
+
+	; Entre 0xA e 0xF
+	CHTOUI_SINGLE_BETWEEN_A_F LD CHTOUI_SINGLE_AC
+	- CONST_H2A_A
+	+ CONST_A
+	RS CHTOUI_SINGLE
+
+	; Inválido
+	CHTOUI_SINGLE_INVALID_INSTRUCTION $ =1
+	RS CHTOUI_SINGLE
+; CHTOUI_SINGLE
+
+; ===============
+; CHTOUI
+; ------
+; Parametros:
+;     CHTOUI_1: Endereço da word1
+;     CHTOUI_2: Endereço da word2
+; Saidas:
+;     AC: Valor representado pelos ascii
+; ==============
+	CHTOUI_1 $ =1
+	CHTOUI_2 $ =1
+
+	CHTOUI_TMP_1 $ =1
+	CHTOUI_TMP_2 $ =1
+	CHTOUI_TMP_3 $ =1
+	CHTOUI_TMP_4 $ =1
+CHTOUI $ =1
+	; Faz o unpack da primeira word
+	LD CHTOUI_1
+	+ CONST_LOAD
+	MM CHTOUI_LOAD_1
+	LV CHTOUI_TMP_1
+	MM UNPACK_1
+	LV CHTOUI_TMP_2
+	MM UNPACK_2
+	CHTOUI_LOAD_1 $ =1
+	SC UNPACK
+
+	; Faz o unpack da segunda word
+	LD CHTOUI_2
+	+ CONST_LOAD
+	MM CHTOUI_LOAD_2
+	LV CHTOUI_TMP_3
+	MM UNPACK_1
+	LV CHTOUI_TMP_4
+	MM UNPACK_2
+	CHTOUI_LOAD_2 $ =1
+	SC UNPACK
+
+	; Seta o pulo da função CHTOUI_SINGLE caso seja inválido
+	LV CHTOUI_INVALID
+	MM CHTOUI_SINGLE_INVALID_JP
+
+	; Converte os 4 ascii para hexa
+	LD CHTOUI_TMP_1
+	SC CHTOUI_SINGLE
+	MM CHTOUI_TMP_1
+	LD CHTOUI_TMP_2
+	SC CHTOUI_SINGLE
+	MM CHTOUI_TMP_2
+	LD CHTOUI_TMP_3
+	SC CHTOUI_SINGLE
+	MM CHTOUI_TMP_3
+	LD CHTOUI_TMP_4
+	SC CHTOUI_SINGLE
+	MM CHTOUI_TMP_4
+
+	; Salva no acumulador
+	LD CHTOUI_TMP_1
+	* CONST_10
+	+ CHTOUI_TMP_2
+	* CONST_10
+	+ CHTOUI_TMP_3
+	* CONST_10
+	+ CHTOUI_TMP_4
+	RS CHTOUI
+
+	; Endereço inválido
+	CHTOUI_INVALID $ =0
+	LD CONST_FFFF
+	RS CHTOUI
+; CHTOUI
 
 ; ===============
 ; UITOCH_SINGLE
