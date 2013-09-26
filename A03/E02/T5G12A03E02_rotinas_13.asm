@@ -2,6 +2,7 @@
 ; Arquivo de rotinas
 ; -------
 ; Rotinas exportadas:
+;     UITOCH
 ;     PACK
 ;     UNPACK
 ;     PACK4
@@ -9,6 +10,10 @@
 ;========================================
 
 ; Nomes exportados
+UITOCH >
+UITOCH_1 >
+UITOCH_2 >
+
 PACK >
 PACK_1 >
 PACK_2 >
@@ -27,13 +32,112 @@ UNPACK4_3 >
 UNPACK4_4 >
 
 ; Nomes importados
+CONST_1 <
+CONST_2 <
+CONST_A <
 CONST_10 <
 CONST_100 <
 CONST_1000 <
+CONST_LOAD <
 CONST_STORE <
+CONST_H2A_0 <
+CONST_H2A_A <
 
 ; Biblioteca
 & /0000
+
+; ===============
+; UITOCH_SINGLE
+; ------
+; Parametros:
+;     AC: Hexa a ser convertido em ASCII
+; Saidas:
+;     AC: Caracter convertido em ASCII
+; ==============
+	UITOCH_SINGLE_AC $ =1
+UITOCH_SINGLE $ =1
+	MM UITOCH_SINGLE_AC
+
+	; Verifica o intervalo do Hex
+	- CONST_A
+	JN UITOCH_SINGLE_BETWEEN_0_9
+
+	; Entre 0xa e 0xf
+	+ CONST_H2A_A
+	RS UITOCH_SINGLE
+
+	; Entre 0x0 e 0x09
+	UITOCH_SINGLE_BETWEEN_0_9 LD UITOCH_SINGLE_AC
+	+ CONST_H2A_0
+	RS UITOCH_SINGLE
+; UITOCH_SINGLE
+
+; ===============
+; UITOCH
+; ------
+; Parametros:
+;	 AC: 4 Hexas que serao convertidos em ASCII
+; Saidas:
+;     UITOCH_1: primeiros 2 hexas convertidos em ASCII
+;     UITOCH_2: ultimos 2 hexas convertidos em ASCII
+; ==============
+	UITOCH_1 $ =1 ; Enrereço onde salvará a primeira word
+	UITOCH_2 $ =1 ; Endereço que salvará a segunda word
+	UITOCH_AC $ =1 ; Valor do acumulador
+
+	UITOCH_TMP_1 $ =1
+	UITOCH_TMP_2 $ =1
+	UITOCH_TMP_3 $ =1
+	UITOCH_TMP_4 $ =1
+; def uitouch (in1, in2, in3, in4)
+UITOCH $ =1
+	MM UITOCH_AC
+	; Faz o unpack
+	LV UITOCH_TMP_1
+	MM UNPACK4_1
+	LV UITOCH_TMP_2
+	MM UNPACK4_2
+	LV UITOCH_TMP_3
+	MM UNPACK4_3
+	LV UITOCH_TMP_4
+	MM UNPACK4_4
+	LD UITOCH_AC
+	SC UNPACK4
+
+	LD UITOCH_TMP_1
+	SC UITOCH_SINGLE
+	MM UITOCH_TMP_1
+
+	LD UITOCH_TMP_2
+	SC UITOCH_SINGLE
+	MM UITOCH_TMP_2
+
+	LD UITOCH_TMP_3
+	SC UITOCH_SINGLE
+	MM UITOCH_TMP_3
+
+	LD UITOCH_TMP_4
+	SC UITOCH_SINGLE
+	MM UITOCH_TMP_4
+
+	; Salva o primeiro character
+	LD CONST_STORE
+	+ UITOCH_1
+	MM UITOCH_STORE_OUT_1
+	LD UITOCH_TMP_1
+	* CONST_100
+	+ UITOCH_TMP_2
+	UITOCH_STORE_OUT_1 $ =1
+
+	; Salva o segundo caracter
+	LD CONST_STORE
+	+ UITOCH_2
+	MM UITOCH_STORE_OUT_2
+	LD UITOCH_TMP_3
+	* CONST_100
+	+ UITOCH_TMP_4
+	UITOCH_STORE_OUT_2 $ =1
+RS UITOCH
 
 ;========================================
 ; PACK
@@ -49,7 +153,7 @@ PACK $ =1
 	LD 	PACK_1
 	*	CONST_100
 	+   PACK_2
-	RS PACK
+RS PACK
 
 ;========================================
 ; UNPACK
@@ -121,7 +225,7 @@ PACK4 $ =1
 	+   PACK4_3
 	*	CONST_10
 	+   PACK4_4
-	RS PACK4
+RS PACK4
 
 ;========================================
 ; UNPACK4
