@@ -1,0 +1,41 @@
+2002 0000 ; "DC1>"		;	DC1 >              ; exportando as variaveis
+2004 0000 ; "DC2>"		;	DC2 >              ; exportando as variaveis
+2006 0000 ; "DC3>"		;	DC3 >              ; exportando as variaveis
+2008 0000 ; "DP1>"		;	DP1    >                ; primeiro caractere a ser packed
+200a 0000 ; "DP2>"		;	DP2    >                ; segundo caractere a ser packed
+200c 0000 ; "DP3>"		;	DP3    >                ; word packed a ser expertada
+200e 0000 ; "DU1>"		;	DU1    >                ; word a ser unpacked
+2010 0000 ; "DU2>"		;	DU2    >                ; primeiro caracter da word unpacked
+2012 0000 ; "DU3>"		;	DU3    >                ; segundo caractere da word unpacked
+2014 0000 ; "VARTMP>"		;	VARTMP >                ; exporting vartmp
+2016 0000 ; "VAREND>"		;	VAREND >                ; exporting VAREND
+2018 0000 ; "CHAREND>"		;	CHAREND   >             ; endereco de char 1
+201a 0000 ; "CHAR1>"		;	CHAR1     >             ; primeiro caracter
+201c 0000 ; "CHAR2>"		;	CHAR2     >             ; segundo caracter
+201e 0000 ; "CHAR3>"		;	CHAR3     >             ; terceiro caracter
+2020 0000 ; "CHAR4>"		;	CHAR4     >             ; quarto caracter
+4000 0000 ; "CHTOUI<"		;	CHTOUI <                ; importando subrotina de CHTOUI
+
+				;	          &  /0000      ; tornando o codigo realocavel
+a000 0022		;	          JP MAIN       ; comecando o main
+8002 4c49		;	DC1       K  'LI        ; primeiro palavra em ASCHII a ser transofrmada em HEXA (/3132)
+8004 584f		;	DC2       K  'XO        ; segunda plavra em ASCHII a ser transofrmada em HEXA (/3334)
+8006 0000		;	DC3       k  /0000      ; uniao das transformacoes (/1234)
+8008 0000		;	DP1       K  /0000      ; primeiro caractere a ser packed
+800a 0000		;	DP2       K  /0000      ; segundo caractere a ser packed
+800c 0000		;	DP3       K  /0000      ; word packed a ser expertada
+800e 0000		;	DU1       K  /0000      ; word a ser unpacked
+8010 0000		;	DU2       K  /0000      ; primeiro caracter da word unpacked
+8012 0000		;	DU3       K  /0000      ; segundo caractere da word unpacked
+8014 0000		;	VARTMP    K  /0000      ; temporary variable
+a016 0002		;	VAREND    K  DC1        ; endereco de DC1
+a018 001a		;	CHAREND   K  CHAR1      ; endereco de char 1
+801a 1000		;	CHAR1     K  /1000      ; primeiro caracter
+801c 0100		;	CHAR2     K  /0100      ; segundo caracter
+801e 0010		;	CHAR3     K  /0010      ; terceiro caracter
+8020 0001		;	CHAR4     K  /0001      ; quarto caracter
+
+d022 a000		;	MAIN      SC CHTOUI     ;
+a024 c024		;	FIM       HM FIM        ; final do programa
+
+

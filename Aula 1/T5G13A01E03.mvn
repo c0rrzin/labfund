@@ -1,0 +1,77 @@
+; prog3.mvn
+; Programa de ilustração para chamada de sub-rotina
+;    int igual(int x, int y) {
+;     return !(x == y);
+;    }
+;
+;
+0000 004C ; Vai para a rotina de copia lista
+0002 0000 ; numero de ocorrencias (resultado)
+0004 0004 ; Dado a ser comparado
+0006 0001 ; Dado 1
+0008 0002 ; Dado 2
+000A 0003 ; Dado 3
+000C 0002 ; Dado 4
+000E 0003 ; Dado 5
+0010 0002 ; Dado 6
+0012 FFFF ; Final de Lista
+;
+; espaço para tornar lista de tamanha variável
+;
+;
+;Inicio do programa
+;
+004C 8108 ; Obtem o endereço onde se deseja ler o dado (a ser comparado) ; endereco de retorno do LOOP
+004E 410A ; Compoe o codigo de opercao load
+0050 9052 ; Guarda instrucao montada a ser executada
+0052 0000 ; carrega o valor da variavel na lista
+0054 9262 ; salva do acumulador para o Y
+0056 A10C ; Chama a subrotina de comparacao (igual) ; checa se Y é o fim da fila
+0058 106E ; Se acumulador = 0, chegou ao fim da fila, vai para 0x068 (fim de programa)
+; se nao
+005A A114 ; Chama subrotina de comparacao (X = Y)
+005C 1066 ; Se acumulador = 0, X = Y (temos que acrescentar 1 no resultado)
+;    se nao
+005E 8108 ; Carrega o endereco de Y
+0060 40EE ; Gera o Proximo endereco
+0062 9108 ; guarda na funcao de load
+0064 004C ; volta para inicio do LOOP
+;
+0066 8002 ; carrega o numero de ocorrencias
+0068 4102 ; adiciona 1
+006A 9002 ; salva no numero de ocorrencias
+006C 005E ; pega o proximo endereco a ser comparado
+;
+006E C06E ; Fim de programa
+;
+;Constantes
+00EE 0002  ; Constante de deslocamento (ADDR + 2)
+0100 0000  ; A = 0x0000 (0)
+0102 0001  ; B = 0x0001 (1)
+0106 FFFF  ; Constante de fim de fila
+;
+; Rotina de loading
+0108 0006  ; local onde dar o load
+010A 8000  ; Constante para dar load
+;
+; Rotina de chegou ao final (comaparador de igual) Y = FFF
+010C 0000 ; Endereço de retorno
+010E 8106 ; Carrega o conteúdo de 0x106 (FFFF)
+0110 5262 ; Subtrai Y, resultado no ACUMULADOR
+0112 B10C ; Retorna para o endereço contido em 0x10C
+;
+;Rotina de comparacao (X=Y)
+0114 0000 ; Endereço de retorno
+0116 8004 ; Carrega o conteúdo de X (numero a ser comparado com os outros)
+0118 5262 ; Subtrai Y, resultado no ACUMULADOR
+011A 1120 ; Se = 0, (x=y) vai para 0x120
+; se nao
+011C 3001 ; Carrega a constante 1 no acumulador
+011E 0122 ; Jump para o retorno da subrotina
+; se sim
+0120 3000 ; Carrega a constante 0 no acumulador
+0122 B114 ; Retorna para o endereço contido em 0x012
+;
+;
+0262 0000 ; Y dado da vez a ser comparado
+;

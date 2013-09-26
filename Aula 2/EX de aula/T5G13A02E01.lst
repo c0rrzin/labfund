@@ -1,0 +1,19 @@
+				;	          @  /0000 ; endereço primeiro dado
+0000 0020		;	I         K  /0020 ; endereço de retorno da subrotina
+0002 00fa		;	D1        K  /00FA ; dado 1
+0004 0010		;	D2        K  /0010 ; dado 2
+0006 0000		;	D3        K  /0000 ; Resultado
+0008 0100		;	DES       k  /0100 ; constante de deslocamento de 2 bytes
+
+
+				;	          @  /0020 ; Estabelecendo o inicio do pragrama para 0010
+0020 a100		;	INIT      SC PACK  ; Chama subrotina de PACK
+0022 c022		;	END       HM END   ;
+
+				;	          @  /0100 ; Endereco da subrotina
+0100 0000		;	PACK      K  /0000 ; endereco de volta da subrotina
+0102 8002		;	          LD D1    ; Carrega o dado 1;
+0104 6008		;	          *  DES   ; Desloca 2 bytes para esquerda
+0106 4004		;	          +  D2    ; add com dado 2
+0108 9006		;	          MM D3    ; salva no dado 3
+010a b100		;	          RS PACK  ; Chama fim de subrotina

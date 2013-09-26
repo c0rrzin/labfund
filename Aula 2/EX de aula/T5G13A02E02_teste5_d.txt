@@ -1,0 +1,3 @@
+[ 0]: 00 20 FA FF 00 FA 00 FF 01 00 3F CA 6D 91 39 1E
+[10]: 9F
+Final do dump.

@@ -1,0 +1,204 @@
+; prog2.mvn
+; Programa de ilustração para chamada de sub-rotina
+; 	 int menor(int x, int y) {
+; 		return !(x < y);
+; 	 }
+; Admitindo que a lista original nao pode ser alterada. Faremos uma cópia da primeira lista
+; e em seguida iniciaremos o processo
+;
+0000 0282 ; Vai para a rotina de copia lista
+0002 8001 ; Dado 1
+0004 8002 ; Dado 2
+0006 8003 ; Dado 3
+0008 FFFF ; Final de Lista
+000A 0000 ; Dado final 1
+000C 0000 ; Dado final 2
+000E 0000 ; Dado final 3
+0010 FFFF ; Final de Lista
+;
+; espaço para tornar lista de tamanha variável
+;
+;
+;Inicio do programa
+0032 8264 ; Carrega pro acumulador endereco do dado 1 ; endereco de inicio do LOOP 1 de comparacao (quando acabou de se mudar o endereco de X)
+0034 410A ; gera funcao de dar load
+0036 9038 ; joga essa funcao no proximo endereco a ser executado
+0038 0000 ; carrega o dado para o acumulador
+003A 9260 ; Carrega do acumulador para o X
+003C A214 ; Chama rotina de ver se X = FFFF
+003E 108E ; se ac = 0, X = FFFF acabou o programa, pule para o final
+; se nao -> continua
+0040 8266 ; Carrega pro acumulador o endereco do valor depois de X
+0042 9108 ; carrega do acumulador para a constante de load
+0044 410A ; gera funcao de dar load
+0046 9048 ; joga essa funcao no proximo endereco
+0048 0000 ; carrega o dado para o acumulador
+004A 9262 ; carrega do acumulador para o Y
+
+;
+004C 8108 ; Obtem o endereço onde se deseja ler o dado (a ser comparado) ; endereco de retorno do LOOP 2 (mudou-se apenas Y)
+004E 410A ; Compoe o codigo de opercao load
+0050 9052 ; Guarda instrucao montada a ser executada
+0052 0000 ; carrega o valor da variavel na lista
+0054 9262 ; Carrega do acumulador para o Y
+0056 A10C ; Chama a subrotina de comparacao (igual) ; checa se Y é o fim da fila
+0058 1068 ; Se acumulador = 0, chegou ao fim da fila, vai para 0x068
+; se nao (LOOP 1)
+005A A114 ; Chama subrotina de comparacao (X<Y)
+005C 1060 ; Se acumulador = 0, X<Y (faz nada), vai para 0x050
+;    se nao (LOOP 2)
+005E A304 ; Chama rotina de troca X por Y
+;    continuacao (LOOP 2)
+0060 8108 ; Carrega o endereco de Y
+0062 40EE ; Gera o Proximo endereco
+0064 9108 ; guarda na funcao de load
+0066 004C ; volta para inicio do LOOP 2
+; se sim (LOOP 1) Y chegou ao final da fila -> veja se o proximo endereco a X é FFFF -> X tambem chegou ao final da fila
+; mas primeiro, guarda valor de X no proximo lugar da lista final
+0068 821C ; carrega atual endereco do ultimo dado a ter sido inserido
+006A 1088 ; se igual = 0, nenhum dado inserido, primeira vez que chegamos em FFFF, o endereco é o proximo;
+; se nao
+006C 40EE ; desloca este ultimo endereco
+006E 921C ; salva novo endereco na rotina de guarda (para proxima vez que carregar)
+0070 821C ; chama este endereco de guarda
+0072 421E ; soma com operacao de guarda
+0074 9078 ; joga a operacao no endereco seguinte ao de load do x
+0076 8260 ; carrega o valor de X para o acumulador
+0078 0000 ; guarda X no endereco da fila
+007A 8264 ; carrega ultimo endereco de x da fila inicial
+007C 40EE ; desloca o endereco
+007E 9264 ; salva novo endereco
+0080 8266 ; carrega ultimo endereco de y da fila inicial
+0082 40EE ; desloca o endereco
+0084 9266 ; salva novo endereco
+0086 0032 ; recomeca o LOOP 1
+;
+0088 8108 ; pega o ultimo endereco de Y (o nde esta guardado FFFF)
+008A 921C ; salva este endereco na rotina de guarda
+008C 006C ; pula para operacao continuacao
+;
+008E C08E ; Fim do programa
+;
+;Constantes
+00EE 0002  ; Constante de deslocamento (ADDR + 2)
+0100 0000  ; A = 0x0000 (0)
+0102 0001  ; B = 0x0001 (1)
+0104 0000  ; Constante Temporaria
+0106 FFFF  ; Constante de fim de fila
+;
+; Rotina de loading
+0108 0000  ; local onde dar o load
+010A 8000  ; Constante para dar load
+;
+; Rotina de chegou ao final (comaparador de igual) Y
+010C 0000 ; Endereço de retorno
+010E 8106 ; Carrega o conteúdo de 0x106 (FFFF)
+0110 5262 ; Subtrai Y, resultado no ACUMULADOR
+0112 B10C ; Retorna para o endereço contido em 0x10C
+;
+;Rotina de comparacao (menor)
+0114 0000 ; Endereço de retorno
+0116 8260 ; Carrega o conteúdo de X
+0118 5262 ; Subtrai Y, resultado no ACUMULADOR
+011A 2120 ; Se negativo, vai para 0x01E
+; se nao
+011C 3001 ; Carrega a constante 1 no acumulador
+011E 0122 ; Jump para o retorno da subrotina
+; se sim
+0120 3000 ; Carrega a constante 0 no acumulador
+0122 B114 ; Retorna para o endereço contido em 0x012
+;
+; rotina de chegou ao final (comparador de igual) X
+0214 0000 ; Endereço de retorno
+0216 8106 ; Carrega o conteúdo de 0x106 (FFFF)
+0218 5260 ; Subtrai X, resultado no ACUMULADOR
+021A B214 ; Retorna para o endereço contido em 0x10C
+;
+;rotina de guarda
+021C 0000 ; endereco a ser guardado
+021E 9000 ; operacao de guardar
+;
+;
+0260 0000 ; X o dado da vez
+0262 0000 ; Y dado a ser comparado
+0264 0000 ; autal endereco de X ; a ser definido pela rotina de copia lista
+0266 0000 ; atual endereco de Y prmeiro da lista after X, para poder ser puxado depois, qdo X mudar de valor
+;
+; rotina de copia lista
+0282 0288 ; pula para loop
+0284 0002 ; crie variavel de enderecos (a ser modificada)
+0286 0000 ; cria variavel de tamanho da lista
+0288 8284 ; Carrega o valor do proximo endereco; INICIO DO LOOP DE ACHA TAMANHO DE FILA
+028A 410A ; gera funcao de dar load
+028C 928E ; guarda no proximo endereco
+028E 0000 ; carrega o dado
+0290 5106 ; subtrai com FFFF
+0292 12A2 ; se igual a 0, lista acabou, sabemos o tamanho dela, podemos copiala
+; se nao
+0294 8286 ; carrega tamanho da lista
+0296 4102 ; soma um
+0298 9286 ; salva valor
+029A 8284 ; carrega o endereco autal
+029C 40EE ; desloca endereco
+029E 9284 ; salva em endereco atual
+02A0 0288 ; recomca loop de acha tamanho de fila
+;
+02A2 80EE ; carrega o valor 002 (primeiro endereco)
+02A4 9284 ; salva na variavel de endereco
+02A6 02AC ; pula para inicio do proximo loop
+02A8 0001 ; cria variavel de iteracoes
+02AA 0000 ; cria variavel temporaria
+02AC 8284 ; Carrega o valor do proximo endereco; INICIO DO LOOP DE COPIA FILA
+02AE 410A ; gera funcao de dar load
+02B0 92B2 ; guarda no proximo endereco
+02B2 0000 ; carrega o dado
+02B4 92AA ; salva na variavel temporaria
+02B6 8284 ; carrega primeiro endereco
+02B8 4286 ; soma com o tamanho da lista
+02BA 4286 ; soma mais uma vez, para obter a paridade de enderecos
+02BC 40EE ; soma com 2 (pois tem o endereco que contem FFFF)
+02BE 421E ; gera operacao de salvar neste endereco
+02C0 92C4 ; salva operacao a ser executada
+02C2 82AA ; carrega valor a ser guardado (variavel temporaria)
+02C4 0000 ; guarda la no novo endereco
+02C6 8286 ; carrega o tamanho da lista
+02C8 52A8 ; subtrai com o numero de iteracoes
+02CA 12DA ; se é 0, acabou
+; se nao
+02CC 82A8 ; carrega numero de iteracoes
+02CE 4102 ; soma 1
+02D0 92A8 ; salva novo valor
+02D2 8284 ; carrega endereco atual
+02D4 40EE ; desloca para o proximo
+02D6 9284 ; salva novo endereco
+02D8 02AC ; comeca loop de novo
+;
+; geracao de dados para o inicio do programa
+02DA 80EE ; carrega o valor 002
+02DC 4286 ; soma com o tamanho da lista
+02DE 4286 ; soma mais uma vez, para obter a paridade de enderecos
+02E0 40EE ; soma com 2 (pois tem o endereco que contem FFFF)
+02E2 9264 ; salva em atual endereco de X
+02E4 40EE ; desloca endereco
+02E6 9266 ; salva em atual endereco de Y
+02E8 0032 ; comeca o programa
+;
+;
+;rotina de troca entre X e Y
+0304 0000 ; Endereço de retorno
+0306 8260 ; Carrega o valor de X
+0308 9104 ; Joga X para const Temporaria
+030A 8264 ; carrega o endereco de X
+030C 421E ; gera funcao de guardar
+030E 9312 ; guarda n endereco para salvar
+0310 8262 ; carrega valor de Y
+0312 0000 ; salva Y em X
+0314 9260 ; salva o valor de Y no valor de X (0x260)
+0316 8108 ; carrega o endereco de Y (o atual fica salvo na constante de loading)
+0318 421E ; gera funcao de guardar
+031A 931E ; guarda no endereco para salvar
+031C 8104 ; carrega valor de X (variavel temporaria)
+031E 0000 ; salva X em Y
+0320 9262 ; salva X em valor de Y
+0322 0304 ; retorna
+;

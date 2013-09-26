@@ -1,0 +1,50 @@
+2002 0000 ; "DP1>"		;	DP1    >                ; primeiro caractere a ser packed
+2004 0000 ; "DP2>"		;	DP2    >                ; segundo caractere a ser packed
+2006 0000 ; "DP3>"		;	DP3    >                ; word packed a ser expertada
+2008 0000 ; "DU1>"		;	DU1    >                ; word a ser unpacked
+200a 0000 ; "DU2>"		;	DU2    >                ; primeiro caracter da word unpacked
+200c 0000 ; "DU3>"		;	DU3    >                ; segundo caractere da word unpacked
+200e 0000 ; "ST1>"		;	ST1    >                ; primeira word (PRIMEIRA STRING)
+201e 0000 ; "ST2>"		;	ST2    >                ; primeira word (SEGUNDA STRING) ['va']
+202e 0000 ; "DS1>"		;	DS1    >                ; numero de words iguais
+4000 0000 ; "PACK<"		;	PACK   <                ; importa subrotina de PACK
+4001 0000 ; "UNPACK<"		;	UNPACK <                ; importa subrotina de UNPACK
+4002 0000 ; "STRCMP<"		;	STRCMP <                ; importa subrotina de STRCMP
+2032 0000 ; "ETMP1>"		;	ETMP1  >
+2030 0000 ; "ETMP2>"		;	ETMP2  >
+
+				;	          &  /0000      ; enderecos absolutos dos dados
+a000 0034		;	INIT      JP MAIN
+8002 0034		;	DP1       K  /0034      ; primeiro caractere a ser packed
+8004 0036		;	DP2       K  /0036      ; segundo caractere a ser packed
+8006 0000		;	DP3       K  /0000      ; word packed a ser expertada
+8008 0000		;	DU1       K  /0000      ; word a ser unpacked
+800a 0000		;	DU2       K  /0000      ; primeiro caracter da word unpacked
+800c 0000		;	DU3       K  /0000      ; segundo caractere da word unpacked
+800e 7661		;	ST1       K  'va        ; primeira word (PRIMEIRA STRING)
+8010 6963		;	          K  'ic        ; segunda word (PRIMEIRA STRING)
+8012 6f6d		;	          K  'om        ; terceira word (PRIMEIRA STRING)
+8014 6665		;	          K  'fe        ; quarta word (PRIMEIRA STRING)
+8016 0000		;	          K  /0000      ; quinta word (PRIMEIRA STRING)   [/0000] (fim)
+8018 0000		;	          K  /0000      ; sexta word (PRIMEIRA STRING)
+801a 0000		;	          K  /0000      ; setima word (PRIMEIRA STRING)
+801c 0000		;	          K  /0000      ; oitava word (PRIMEIRA STRING)
+801e 7661		;	ST2       K  'va        ; primeira word (SEGUNDA STRING) ['va']
+8020 6963		;	          K  'ic        ; segunda word (SEGUNDA STRING)  ['ic']
+8022 6f70		;	          K  'op        ; terceira word (SEGUNDA STRING) ['om']
+8024 7170		;	          K  'qp        ; quarta word (SEGUNDA STRING)   ['fe']
+8026 0000		;	          K  /0000      ; quinta word (SEGUNDA STRING)   [/0000] (fim)
+8028 0000		;	          K  /0000      ; sexta word (SEGUNDA STRING)
+802a 0000		;	          K  /0000      ; setima word (SEGUNDA STRING)
+802c 0000		;	          K  /0000      ; oitava word (SEGUNDA STRING)
+802e 0000		;	DS1       K  /0000      ; numero de words iguais
+
+a030 001e		;	ETMP2     K   ST2     ; endereco da word da string 2
+a032 000e		;	ETMP1     k   ST1     ; endereco da word da string 1
+
+
+
+d034 a002		;	MAIN      SC STRCMP     ; chama STRCMP
+d036 a000		;	          SC PACK       ; chama PACK
+          ;SC UNPACK     ; o unpack é chamado na funcao de strcmp, portanto, se uma fincionar, a outra esta funcionando
+a038 c038		;	FIMPRG    HM FIMPRG     ; fim do programa

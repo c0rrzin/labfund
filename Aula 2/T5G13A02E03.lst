@@ -1,0 +1,145 @@
+				;	          @   /0000  ; endereço do inicio do programa
+0000 003a		;	I         K   INIT   ; endereço de inicio de simulacao
+
+				;	          @   /0002  ; endereco do numero de words iguais
+0002 0000		;	S         K   /0000  ; numero de words iguais
+
+				;	          @   /0004  ; endereco da primeira word
+0004 7661		;	E1        K   'va    ; primeira word (PRIMEIRA STRING)
+0006 6963		;	          K   'ic    ; segunda word (PRIMEIRA STRING)
+0008 6f6d		;	          K   'om    ; terceira word (PRIMEIRA STRING)
+000a 6665		;	          K   'fe    ; quarta word (PRIMEIRA STRING)
+000c 0000		;	          K   /0000  ; quinta word (PRIMEIRA STRING)   [/0000] (fim)
+000e 0000		;	          K   /0000  ; sexta word (PRIMEIRA STRING)
+0010 0000		;	          K   /0000  ; setima word (PRIMEIRA STRING)
+0012 0000		;	          K   /0000  ; oitava word (PRIMEIRA STRING)
+
+				;	          @   /0014  ; endereco da segunda word
+0014 7661		;	E2        K   'va    ; primeira word (SEGUNDA STRING) ['va']
+0016 6963		;	          K   'ic    ; segunda word (SEGUNDA STRING)  ['ic']
+0018 6f70		;	          K   'op    ; terceira word (SEGUNDA STRING) ['om']
+001a 7170		;	          K   'qp    ; quarta word (SEGUNDA STRING)   ['fe']
+001c 0000		;	          K   /0000  ; quinta word (SEGUNDA STRING)   [/0000] (fim)
+001e 0000		;	          K   /0000  ; sexta word (SEGUNDA STRING)
+0020 0000		;	          K   /0000  ; setima word (SEGUNDA STRING)
+0022 0000		;	          K   /0000  ; oitava word (SEGUNDA STRING)
+
+
+0024 0001		;	UM        K   /0001  ; constante para adicionar na contagem de strings iguais
+0026 0002		;	DOIS      k   /0002  ; constante de SHIFT (proximo endereco)
+0028 0010		;	DZES      K   /0010  ; constante de diferenca de endereco entre strings (dezesseis)
+002a 0004		;	ETMP1     k   E1     ; endereco da word da string 1
+002c 0000		;	TMP1      K   /0000  ; word da string 1
+002e 0000		;	TMP11     K   /0000  ; PACK 1 da word unpacked da string 1
+0030 0000		;	TMP12     K   /0000  ; PACK 2 da word unpacked da string 1
+0032 0014		;	ETMP2     K   E2     ; endereco da word da string 2
+0034 0000		;	TMP2      K   /0000  ; word da string 2
+0036 0000		;	TMP21     K   /0000  ; PACK 1 da word unpacked da string 2
+0038 0000		;	TMP22     K   /0000  ; PACK 2 da word unpacked da string 2
+
+003a a050		;	INIT      SC  STRCMP ; chama subrotina de string compare
+003c c03c		;	FIM       HM  FIM    ; fim do programa
+
+				;	          @   /0050  ; endereco da subrotina de STRCMP
+0050 0000		;	STRCMP    K   /0000  ; endereco de retorno da subrotina
+0052 802a		;	LOOP      LD  ETMP1  ; carrega endereco da word a ser carregada, str1 (INICIO DO LOOP)
+0054 4220		;	          +   ADD    ; gera endereco de load
+0056 9058		;	          MM  PROX3  ; salva no proximo endereco
+0058 0000		;	PROX3     K   /0000  ; carrega a word da str 1
+005a 902c		;	          MM  TMP1   ; salva na temprary word 1
+005c 8032		;	          LD  ETMP2  ; carrega endereco da word a ser carregada, str2
+005e 4220		;	          +   ADD    ; gera endereco de load
+0060 9062		;	          MM  PROX4  ; salva no proximo endereco
+0062 0000		;	PROX4     K   /0000  ; carrega a word da str 2
+0064 9034		;	          MM  TMP2   ; salva na temprary word 2
+0066 a230		;	          SC  ISZERO ; checa se algum dos dados é 0
+0068 109a		;	          JZ  ESCMP  ; se é 0, alguma das strings chegou ao fim, retornar sub rotina
+                     ; checamos o fim de loop, agora precisamors unpack as words e comparar caracter a caracter
+006a 802c		;	          LD  TMP1   ; carrega a primeira word
+006c 9204		;	          MM  EN     ; salva ela na word a ser unpacked
+006e a200		;	          SC  UNPACK ; chama subrotina de unpack
+0070 8206		;	          LD  SU1    ; pega primeiro caractere
+0072 902e		;	          MM  TMP11  ; salva na temporary correspondente
+0074 9264		;	          MM  WD1    ; ja salva na word a ser comparada
+0076 8208		;	          LD  SU2    ; pega segundo caractere
+0078 9030		;	          MM  TMP12  ; salva na temporary correspondente
+007a 8034		;	          LD  TMP2   ; carrega a primeira word
+007c 9204		;	          MM  EN     ; salva ela na word a ser unpacked
+007e a200		;	          SC  UNPACK ; chama subrotina de unpack
+0080 8206		;	          LD  SU1    ; pega primeiro caractere
+0082 9036		;	          MM  TMP21  ; salva na temporary correspondente
+0084 9266		;	          MM  WD2    ; ja salva na word a ser comparada
+0086 8208		;	          LD  SU2    ; pega segundo caractere
+0088 9038		;	          MM  TMP22  ; salva na temporary correspondente
+008a a260		;	          SC  WCMP   ; chama subrotina de comparacao dos primeiros caracteres (que ja foram salvos nela)
+008c 8030		;	          LD  TMP12  ; carrega segundo caractere da word 1
+008e 9264		;	          MM  WD1    ; salva na word a ser comparada
+0090 8038		;	          LD  TMP22  ; carrega segundo caractere da word 2
+0092 9266		;	          MM  WD2    ; carrega na word a ser comparada
+0094 a260		;	          SC  WCMP   ; chama subrotina de word compare
+0096 a240		;	          SC  SHIFT  ; carrega proximos valores de endereco e words a serem comparados
+0098 0052		;	          JP  LOOP   ; recomeca o loop
+009a 8002		;	ESCMP     LD  S      ; carrega o numero de ocorrencias para o acumulador
+009c b050		;	          RS  STRCMP ; retorno da subrotina
+
+				;	          @   /0200  ; Endereco da subrotina de UNPACK
+0200 0000		;	UNPACK    K   /0000  ; endereco de volta da subrotina
+0202 020c		;	          JP  IUNP   ; vai para inicio da subrotina
+0204 0000		;	EN        K   /0000  ; word a ser unpacked
+0206 0000		;	SU1       K   /0000  ; Saida 1
+0208 0000		;	SU2       K   /0000  ; Saida 2
+020a 0100		;	DES       k   /0100  ; constante de deslocamento de 2 bytes
+020c 8204		;	IUNP      LD  EN     ; Carrega o dado 1;  EX : 2002
+020e 720a		;	          /   DES    ; desloca 2 bytes para a direita  EX: 0020
+0210 9206		;	          MM  SU1    ; salva no primeiro dado de saida
+0212 620a		;	          *   DES    ; desloca 2 bytes para a esquerda EX: 2000
+0214 9208		;	          MM  SU2    ; salva na saida sU2 para buscar depois
+0216 8204		;	          LD  EN     ; carrega o dado de entrada EX : 2002
+0218 5208		;	          -   SU2    ; faz menos o primeiro dado salvo EX : 0002
+021a 9208		;	          MM  SU2    ; salva o real valor na saida SU1
+021c b200		;	          RS  UNPACK ; return
+
+				;	          @   /0220  ; Funcao de load
+0220 8000		;	ADD       LD  /0000  ; constante de dar load (a ser somado)
+
+				;	          @   /0230  ; endereco da subrotina de compara 0000 (fim de string)
+0230 0000		;	ISZERO    K   /0000  ; endereco de retorno de subrotina
+0232 802c		;	          LD  TMP1   ; carrega a word da primeira string
+0234 123c		;	          JZ  RISZ   ; a word é 0, fim de string, retorna com 0
+0236 8034		;	          LD  TMP2   ; se nao é zero, checar se a word da string 2 é 0
+0238 123c		;	          JZ  RISZ   ; a word é 0, fim de string, retorna com 0
+023a 3001		;	          LV  /0001  ; nenhuma string é 0, carrega valor 1 no acumulador
+023c b230		;	RISZ      RS  ISZERO ; retorno de subrotina
+
+				;	          @  /0240   ; subrotina de carrega proximas words
+0240 0000		;	SHIFT     K  /0000   ; endereco de retorno da subrotina
+0242 802a		;	          LD ETMP1   ; carrega o atual endereco da word string 1
+0244 4026		;	          +  DOIS    ; soma o proximo endereco
+0246 902a		;	          MM ETMP1   ; salva de volta no endereco
+0248 4220		;	          +  ADD     ; monta funcao de load
+024a 924c		;	          MM PROX    ; guarda no proximo endereco
+024c 0000		;	PROX      K  /0000   ; carrega a nova word da string 1
+024e 902c		;	          MM TMP1    ; salva na temporary word da string 1
+0250 8032		;	          LD ETMP2   ; carrega o atual endereco da word string 2
+0252 4026		;	          +  DOIS    ; soma o proximo endereco
+0254 9032		;	          MM ETMP2   ; salva de volta no endereco
+0256 4220		;	          +  ADD     ; monta funcao de load
+0258 925a		;	          MM PROX2   ; guarda no proximo endereco
+025a 0000		;	PROX2     K  /0000   ; carrega a nova word da string 2
+025c 9034		;	          MM TMP2    ; salva na temporary word da string 2
+025e b240		;	          RS SHIFT   ; retorno da sub rotina
+
+				;	          @  /0260   ; subrotina de camparacao entre duas words
+0260 0000		;	WCMP      K  /0000   ; endereco de retorno da subrotina
+0262 0268		;	          JP IWC     ; vai para incio da subrotina
+0264 0000		;	WD1       K  /0000   ; word 1 a ser comparada
+0266 0000		;	WD2       K  /0000   ; wrod 2 a ser comparada
+0268 8264		;	IWC       LD WD1     ; carrega word 1
+026a 5266		;	          -  WD2     ; subtrai da word 2
+026c 1270		;	          JZ CONT    ; se é zero, adiciona 1 no contador antes de continuar
+026e b260		;	FIMW      RS WCMP    ; fim de subrotina
+0270 8002		;	CONT      LD S       ; carrega saida do programa (numero de ocorrencias iguais)
+0272 4024		;	          +  UM      ; soma um a esse numero
+0274 9002		;	          MM S       ; salva no numero de ocorrencias
+0276 026e		;	          JP FIMW    ; retorna subrotina
+

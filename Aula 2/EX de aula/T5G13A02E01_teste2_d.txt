@@ -1,0 +1,2 @@
+[ 0]: 00 10 00 7F 00 FF 7F FF 01
+Final do dump.

@@ -1,0 +1,8 @@
+[ 0]: 00 22 38 30 30 30 00 00 00 00 00 00 00 00 30
+Final do dump.
+
+Conteudo dos resgistradores ao final
+
+ MAR  MDR  IC   IR   OP   OI   AC
+---- ---- ---- ---- ---- ---- ----
+0024 C024 0024 C024 000C 0024 FFFF

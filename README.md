@@ -25,7 +25,7 @@ Exemplo:
         E01 /
       A02 /
         E01 /
-        E02 / 
+        E02 /
       ...
 
 ### 3) Comitar mudanças

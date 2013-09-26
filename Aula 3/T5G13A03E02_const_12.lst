@@ -1,0 +1,27 @@
+2000 0000 ; "UM>"		;	UM >
+2002 0000 ; "DOIS>"		;	DOIS >
+2004 0000 ; "DZES>"		;	DZES >
+2006 0000 ; "DCES>"		;	DCES >
+2008 0000 ; "GIGAS>"		;	GIGAS >
+200a 0000 ; "MUM>"		;	MUM >
+200c 0000 ; "TTA0>"		;	TTA0 >
+200e 0000 ; "TTAA>"		;	TTAA >
+2010 0000 ; "QTA1>"		;	QTA1 >
+2012 0000 ; "QTA7>"		;	QTA7 >
+2014 0000 ; "IT>"		;	IT >
+2016 0000 ; "CA>"		;	CA >
+
+				;	          &  /0000 ; tornando o codigo realocavel
+8000 0001		;	UM        K  /0001 ;
+8002 0002		;	DOIS      K  /0002 ;
+8004 0010		;	DZES      K  /0010 ;
+8006 0100		;	DCES      K  /0100 ;
+8008 1000		;	GIGAS     K  /1000 ;
+800a ffff		;	MUM       K  /FFFF ;
+800c 0030		;	TTA0      K  /0030 ;
+800e 003a		;	TTAA      K  /003A ;
+8010 0041		;	QTA1      K  /0041 ;
+8012 004b		;	QTA7      K  /004B ;
+8014 0000		;	IT        K  /0000 ;
+8016 000a		;	CA        K  /000A ;
+
