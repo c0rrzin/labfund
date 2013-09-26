@@ -3,7 +3,7 @@
 #========================================
 
 # Exercícios a serem compilados
-EXCERCISES := E01
+EXCERCISES := E01 E02
 
 # Algumas variaveis
 CURSPACES:="$(SPACES)"
