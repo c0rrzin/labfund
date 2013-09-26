@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 
 /**
@@ -47,19 +47,23 @@ public class Ponto {
 	public void setY(float y) {
 		this.y = y;
 	}
-        
+
         /**
 	 * Calcula a distancia deste ponto ao ponto passado como parametro
 	 * @param P o Ponto cuja distancia se quer calcular
 	 */
-        public float getDistancia(Ponto p){
-            float distX = this.x - p.getX();
-            float distY = this.y - p.getY();
-            
-            return (float) (Math.sqrt(distX*distX + distY*distY));
-            
-        }
-	
-	
-	
+  public float getDistancia(Ponto p){
+      float distX = this.x - p.getX();
+      float distY = this.y - p.getY();
+
+      return (float) (Math.sqrt(distX*distX + distY*distY));
+
+  }
+
+  public boolean isLinearIndependent(Ponto p){
+  	float det = Math.abs((this.y * p.getY()) - (this.x * p.getX()) );
+  	System.out.println(det);
+  	return det != 0;
+  }
+
 }
