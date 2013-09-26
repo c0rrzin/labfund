@@ -2,6 +2,10 @@
 # Base para compilar um programa usando a MVN
 #========================================
 
+# Inclui as variaveis básicas
+TOPDIR=${CURDIR}/../../
+include ${TOPDIR}/UsedVars.mk
+
 # Arquivos fontes
 SRCS=T5G12A03E01_main_13.asm \
 	T5G12A03E01_const_13.asm \
@@ -18,18 +22,8 @@ OBJ_DIR=obj
 OBJS=$(SRCS:%.asm=$(OBJ_DIR)/%.mvn)
 LSTS=$(SRCS:%.asm=$(OBJ_DIR)/%.lst)
 
-# Algumas variaveis
-CURSPACES:="$(SPACES)"
-SPACES:="$(CURSPACES)    "
-CP?=cp
-MV?=mv
-MKDIR?=mkdir -p
-
 # Sempre faz a limpeza
 .PHONY: clean
-
-# Exportação
-export SPACES
 
 # Copia os asm para a pasta
 $(OBJ_DIR)/%.asm: %.asm
@@ -38,17 +32,17 @@ $(OBJ_DIR)/%.asm: %.asm
 # Compila o asm para lst e mvn
 $(OBJ_DIR)/%.mvn: $(OBJ_DIR)/%.asm
 	echo "$(CURSPACES)Compilando $<"
-	$(JAVA) -cp $(MLR) montador.MvnAsm $< >/dev/null
+	$(JAVA) -cp $(MLR) montador.MvnAsm $<
 
 # Linka os mvn gerados
 $(OBJ_DIR)/link.mvn: $(OBJS)
 	echo "$(CURSPACES)Linkando $(OBJS)"
-	$(JAVA) -cp $(MLR) linker.MvnLinker $(OBJS) -s $(OBJ_DIR)/link.mvn >/dev/null
+	$(JAVA) -cp $(MLR) linker.MvnLinker $(OBJS) -s $(OBJ_DIR)/link.mvn
 
 # Realoca o arquivo
 $(OUT): $(OBJ_DIR)/link.mvn
 	echo "$(CURSPACES)Realocando"
-	$(JAVA) -cp $(MLR) relocator.MvnRelocator $(OBJ_DIR)/link.mvn $(OUT) $(BASE_RELOCACAO) $(ENDERECO_INICIO) >/dev/null
+	$(JAVA) -cp $(MLR) relocator.MvnRelocator $(OBJ_DIR)/link.mvn $(OUT) $(BASE_RELOCACAO) $(ENDERECO_INICIO)
 	$(MV) $(OUT:.mvn=.run) $(OBJ_DIR)/$(OUT:.mvn=.run)
 
 # Cria o diretório de objeto
@@ -62,5 +56,5 @@ all: $(OBJ_DIR) $(OUT)
 # Alvo padrão
 clean:
 	@echo "$(CURSPACES)Removendo $(LSTS) $(OBJS) $(OBJ_DIR)/$(OUT:.mvn=.run) $(OBJ_DIR)/link.mvn"
-	rm -f $(LSTS) $(OBJS) $(OBJ_DIR)/$(OUT:.mvn=.run) $(OBJ_DIR)/link.mvn
+	$(RM) $(LSTS) $(OBJS) $(OBJ_DIR)/$(OUT:.mvn=.run) $(OBJ_DIR)/link.mvn $(OUT)
 

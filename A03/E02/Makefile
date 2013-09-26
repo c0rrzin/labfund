@@ -2,6 +2,10 @@
 # Base para compilar um programa usando a MVN
 #========================================
 
+# Inclui as variaveis básicas
+TOPDIR=${CURDIR}/../../
+include ${TOPDIR}/UsedVars.mk
+
 # Arquivos fontes
 SRCS=T5G12A03E02_main_13.asm \
 	T5G12A03E02_const_13.asm \
@@ -18,18 +22,8 @@ OBJ_DIR=obj
 OBJS=$(SRCS:%.asm=$(OBJ_DIR)/%.mvn)
 LSTS=$(SRCS:%.asm=$(OBJ_DIR)/%.lst)
 
-# Algumas variaveis
-CURSPACES:="$(SPACES)"
-SPACES:="$(CURSPACES)    "
-CP?=cp
-MV?=mv
-MKDIR?=mkdir -p
-
 # Sempre faz a limpeza
 .PHONY: clean
-
-# Exportação
-export SPACES
 
 # Copia os asm para a pasta
 $(OBJ_DIR)/%.asm: %.asm
@@ -62,5 +56,5 @@ all: $(OBJ_DIR) $(OUT)
 # Alvo padrão
 clean:
 	@echo "$(CURSPACES)Removendo $(LSTS) $(OBJS) $(OBJ_DIR)/$(OUT:.mvn=.run) $(OBJ_DIR)/link.mvn"
-	rm -f $(LSTS) $(OBJS) $(OBJ_DIR)/$(OUT:.mvn=.run) $(OBJ_DIR)/link.mvn $(OUT)
+	$(RM) $(LSTS) $(OBJS) $(OBJ_DIR)/$(OUT:.mvn=.run) $(OBJ_DIR)/link.mvn $(OUT)
 

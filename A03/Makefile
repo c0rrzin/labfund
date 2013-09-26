@@ -2,18 +2,12 @@
 # Compila cada exercício da aula3
 #========================================
 
+# Inclui as variaveis básicas
+TOPDIR=${CURDIR}/../
+include ${TOPDIR}/UsedVars.mk
+
 # Exercícios a serem compilados
 EXCERCISES := E01 E02
-
-# Algumas variaveis
-CURSPACES:="$(SPACES)"
-SPACES:="$(CURSPACES)    "
-CP?=cp
-MV?=mv
-MKDIR?=mkdir -p
-
-# Exporta o projeto
-export SPACES CP MV MKDIR
 
 # Limpa os objetos
 EXCERCISES_CLEAN:=$(EXCERCISES:=.clean)
