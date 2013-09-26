@@ -1,3 +1,20 @@
+;========================================
+; Arquivo de rotinas
+; -------
+; Rotinas exportadas:
+;     PACK
+;     UNPACK
+;     PACK4
+;     UNPACK4
+;========================================
+
+; Nomes exportados
+PACK >
+PACK_1 >
+PACK_2 >
+UNPACK >
+UNPACK_1 >
+UNPACK_2 >
 PACK4 >
 PACK4_1 >
 PACK4_2 >
@@ -9,6 +26,7 @@ UNPACK4_2 >
 UNPACK4_3 >
 UNPACK4_4 >
 
+; Nomes importados
 CONST_10 <
 CONST_100 <
 CONST_1000 <
