@@ -76,6 +76,9 @@ public class PainelControle{
 	private static final char				CMD_AJUDA													= 'h';
 	
 	/*** Comando do painel: finaliza */
+	private static final char				CMD_GABARITO											= 't';
+	
+	/*** Comando do painel: finaliza */
 	private static final char				CMD_FINALIZA											= 'x';
 	
 	/*** Ajuda do painel: inicializa */
@@ -106,6 +109,9 @@ public class PainelControle{
 	private static final String[]		MEMORIA														= new String[]{
 			"[ini] [fim] [arq]", "Lista conteúdo da memória"							};
 	
+	private static final String[]       GABARITO                                                 = new String[]{
+		    "[arq]", "Carrega gabarito"                                               };
+	
 	/*** Ajuda do painel: ajuda */
 	private static final String[]		AJUDA															= new String[]{
 			"", "Ajuda"																										};
@@ -121,7 +127,7 @@ public class PainelControle{
 	// CMD_FINALIZA };
 	private static final char[]			MENU_CMD													= new char[]{
 			CMD_INICIALIZA, CMD_ASCII, CMD_EXECUTA, CMD_DEBUG, CMD_DISPOSITIVOS,
-			CMD_REGISTRADORES, CMD_MEMORIA, CMD_AJUDA, CMD_FINALIZA				};
+			CMD_REGISTRADORES, CMD_MEMORIA, CMD_GABARITO, CMD_AJUDA, CMD_FINALIZA				};
 	
 	/*** Ajuda do painel: Lista das descrições */
 	// private static final String[][] MENU_DESC = new String[][]{
@@ -592,7 +598,9 @@ public class PainelControle{
 		dumpFile.print(conteudo);
 		dumpFile.close();
 	}
-	
+	private void carregaGabarito(String[] args) {
+		/**TODO**/
+	}
 	
 	/**
 	 * Executa o comando de execuçăo de programas na memória.<br/>
@@ -727,6 +735,9 @@ public class PainelControle{
 				break;
 			case CMD_MEMORIA:
 				dumpMemory(ExtractArguments(parametros));
+				break;
+			case CMD_GABARITO:
+				carregaGabarito(ExtractArguments(parametros));
 				break;
 			case CMD_AJUDA:
 				ajuda();
