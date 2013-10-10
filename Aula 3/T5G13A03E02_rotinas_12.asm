@@ -149,7 +149,7 @@ SV1       K  /0000        ; salva caractere
 
 UITOCH    JP /0000        ; retorno de subrotina
 INITUI    LD DUI1         ; carrega palavra a ser desmontada
-          MM DU1         ; salva na constante de unpack
+          MM DU1          ; salva na constante de unpack
           SC UNPACK       ; chama unpack
 LOOP1     LD VAREND2      ; carrega o endereco da atual word INICIO DO LOOP
           +  LOAD         ; gera funcao de dar LOAD
