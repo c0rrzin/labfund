@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="1.7.0_25" class="java.beans.XMLDecoder">
+ <object class="com.horstmann.violet.ClassDiagramGraph">
+  <void method="addNode">
+   <object class="com.horstmann.violet.ClassNode" id="ClassNode0">
+    <void property="methods">
+     <void property="text">
+      <string>+exibeLinha(mensagem : String, args : Object[] ) : void</string>
+     </void>
+    </void>
+    <void property="name">
+     <void property="text">
+      <string>TerminalTeste</string>
+     </void>
+    </void>
+   </object>
+   <object class="java.awt.geom.Point2D$Double" id="Point2D$Double0">
+    <void class="java.awt.geom.Point2D$Double" method="getField">
+     <string>x</string>
+     <void method="set">
+      <object idref="Point2D$Double0"/>
+      <double>279.0</double>
+     </void>
+    </void>
+    <void class="java.awt.geom.Point2D$Double" method="getField">
+     <string>y</string>
+     <void method="set">
+      <object idref="Point2D$Double0"/>
+      <double>432.0</double>
+     </void>
+    </void>
+    <void method="setLocation">
+     <double>279.0</double>
+     <double>432.0</double>
+    </void>
+   </object>
+  </void>
+  <void method="addNode">
+   <object class="com.horstmann.violet.ClassNode" id="ClassNode1">
+    <void property="methods">
+     <void property="text">
+      <string>#setIn() : BufferedReader
+#setOut() : PrintStream
+#setErr() : PrintStream</string>
+     </void>
+    </void>
+    <void property="name">
+     <void property="text">
+      <string>TerminalPadrao</string>
+     </void>
+    </void>
+   </object>
+   <object class="java.awt.geom.Point2D$Double" id="Point2D$Double1">
+    <void class="java.awt.geom.Point2D$Double" method="getField">
+     <string>x</string>
+     <void method="set">
+      <object idref="Point2D$Double1"/>
+      <double>350.0</double>
+     </void>
+    </void>
+    <void class="java.awt.geom.Point2D$Double" method="getField">
+     <string>y</string>
+     <void method="set">
+      <object idref="Point2D$Double1"/>
+      <double>264.0</double>
+     </void>
+    </void>
+    <void method="setLocation">
+     <double>350.0</double>
+     <double>264.0</double>
+    </void>
+   </object>
+  </void>
+  <void method="addNode">
+   <object class="com.horstmann.violet.ClassNode" id="ClassNode2">
+    <void property="attributes">
+     <void property="text">
+      <string>-in : BufferedReader
+-out : PrintStream
+-out : PrintStream</string>
+     </void>
+    </void>
+    <void property="methods">
+     <void property="text">
+      <string>+exibeLinha( mensagem : String, args : Object [] ) : void
+#setIn() : BufferedReader
+#setOut() : PrintStream
+#setErr() : PrintStream</string>
+     </void>
+    </void>
+    <void property="name">
+     <void property="text">
+      <string>Terminal</string>
+     </void>
+    </void>
+   </object>
+   <object class="java.awt.geom.Point2D$Double" id="Point2D$Double2">
+    <void class="java.awt.geom.Point2D$Double" method="getField">
+     <string>x</string>
+     <void method="set">
+      <object idref="Point2D$Double2"/>
+      <double>277.0</double>
+     </void>
+    </void>
+    <void class="java.awt.geom.Point2D$Double" method="getField">
+     <string>y</string>
+     <void method="set">
+      <object idref="Point2D$Double2"/>
+      <double>65.0</double>
+     </void>
+    </void>
+    <void method="setLocation">
+     <double>277.0</double>
+     <double>65.0</double>
+    </void>
+   </object>
+  </void>
+  <void method="connect">
+   <object class="com.horstmann.violet.ClassRelationshipEdge">
+    <void property="bentStyle">
+     <object class="com.horstmann.violet.BentStyle" field="VHV"/>
+    </void>
+    <void property="endArrowHead">
+     <object class="com.horstmann.violet.ArrowHead" field="TRIANGLE"/>
+    </void>
+   </object>
+   <object idref="ClassNode0"/>
+   <object idref="ClassNode1"/>
+  </void>
+  <void method="connect">
+   <object class="com.horstmann.violet.ClassRelationshipEdge">
+    <void property="bentStyle">
+     <object class="com.horstmann.violet.BentStyle" field="VHV"/>
+    </void>
+    <void property="endArrowHead">
+     <object class="com.horstmann.violet.ArrowHead" field="TRIANGLE"/>
+    </void>
+   </object>
+   <object idref="ClassNode1"/>
+   <object idref="ClassNode2"/>
+  </void>
+ </object>
+</java>
