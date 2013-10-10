@@ -38,5 +38,9 @@ Exemplo:
 
     git pull origin TXGYY
 
+### TODO
+  1) Scripts para linkar / montar / etc
+  2) Melhorar documentação (como instalar git, etc.)
+
 ## Seja consicente. Não copie código, apenas se inspire :)
 
