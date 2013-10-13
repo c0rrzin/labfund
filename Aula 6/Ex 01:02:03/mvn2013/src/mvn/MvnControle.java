@@ -14,6 +14,10 @@ package mvn;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.StringTokenizer;
+
 import mvn.controle.MVNException;
 
 /**
@@ -224,6 +228,52 @@ public class MvnControle{
 			}catch(MVNException e){
 				throw new MVNException(ERR_PARSE_ERROR, linhaAtual);
 			}
+			
+			if(firstAddr >= 0){
+				cpu.obterRegs().getRegister(UnidadeControle.IC).setValue(firstAddr);
+			}
+		}catch(IOException e){
+			throw new MVNException(ERR_READ_FILE, filename);
+		}
+	}
+	
+	
+	/**
+	 * Carrega um arquivo em formato texto para a memória.<br/>
+	 * Caso a memória seja alterada, o primeiro endereço alterado pelo arquivo
+	 * é passado para o registrador de endereço de instrução (IC).<br/>
+	 * <br/>
+	 * <b>Pré-condição</b>: O arquivo deve existir e estar no formato correto.<br/>
+	 * <b>Pós-condição</b>: O conteúdo do arquivo é processado para a memória.
+	 * 
+	 * @param filename
+	 *          nome do arquivo
+	 * @throws MVNException
+	 *           caso ocorra algum erro de execução
+	 */
+	public void loadFileToMap(String filename) throws MVNException{
+		try{
+			// Cria um buffer de leitura para o arquivo texto
+			BufferedReader inFile = new BufferedReader(new FileReader(filename));
+			String line;
+			
+			int firstAddr = -1;
+			
+			// Itera sobre as linhas do arquivo, obtendo os endereços e executando o
+			// parser
+			Map<Word,Word> hash = new HashMap<Word, Word>();
+			int linhaAtual = 1;
+//			try{
+				while((line = inFile.readLine()) != null){
+					StringTokenizer dataLine = new StringTokenizer(line);
+					while(dataLine.hasMoreTokens()) {
+						System.out.printf("%s", dataLine.nextToken());
+					}
+					linhaAtual++;
+				}
+//			}catch(MVNException e){
+//				throw new MVNException(ERR_PARSE_ERROR, linhaAtual);
+//			}
 			
 			if(firstAddr >= 0){
 				cpu.obterRegs().getRegister(UnidadeControle.IC).setValue(firstAddr);

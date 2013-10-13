@@ -153,6 +153,9 @@ public class PainelControle{
 	/*** Mensagem: Programa carregado */
 	private static final String			MSG_PROGRAMA_CARREGADO						= "Programa %s carregado";
 	
+	/*** Mensagem: Programa carregado */
+	private static final String			MSG_ARQUIVO_CARREGADO						= "Arquivo %s carregado";
+	
 	/*** Mensagem: Informe o endereço inicial */
 	private static final String			MSG_INFORME_ENDERECO_INI					= "Informe o endereço inicial [%4H]: ";
 	
@@ -294,7 +297,7 @@ public class PainelControle{
 	 */
 	public PainelControle(MvnControle mvn, boolean debug){
 		this.mvn = mvn;
-		this.terminal = new TerminalTeste(debug);
+		this.terminal = new TerminalPadrao(debug);
 		
 		initialize();
 	}
@@ -552,8 +555,8 @@ public class PainelControle{
 				filename.deleteCharAt(filename.length() - 1);
 			}
 			
-			mvn.loadFileToMemory(filename.toString());
-			terminal.exibeLinha(MSG_PROGRAMA_CARREGADO, filename.toString());
+			mvn.loadFileToMap(filename.toString());
+			terminal.exibeLinha(MSG_ARQUIVO_CARREGADO, filename.toString());
 		}else{
 			throw new MVNException(MSG_ERRO_ABRIR_ARQUIVO);
 		}
