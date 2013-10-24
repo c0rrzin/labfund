@@ -25,6 +25,9 @@ LSTS=$(SRCS:%.asm=$(OBJ_DIR)/%.lst)
 # Sempre faz a limpeza
 .PHONY: clean
 
+# Alvo padrão
+all: $(OBJ_DIR) $(OUT)
+
 # Copia os asm para a pasta
 $(OBJ_DIR)/%.asm: %.asm
 	$(CP) $< $@
@@ -49,9 +52,6 @@ $(OUT): $(OBJ_DIR)/link.mvn
 $(OBJ_DIR):
 	echo "$(CURSPACES)Criando pasta \"$(OBJ_DIR)\""
 	$(MKDIR) $(OBJ_DIR)
-
-# Alvo padrão
-all: $(OBJ_DIR) $(OUT)
 
 # Alvo padrão
 clean:
