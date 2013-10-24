@@ -32,5 +32,3 @@ START			LD	END_INICIAL	; Parametros, na ordem acima
 FIM_MAIN		HM	FIM_MAIN	; Fim do main
 
 # MAIN
-				
-PD /301 # E300 + UL
