@@ -7,7 +7,7 @@ TOPDIR=${CURDIR}/
 include ${TOPDIR}/UsedVars.mk
 
 # Aulas a serem compiladas
-AULAS = A01 A02 A03
+AULAS = A01 A02 A03 A07
 
 # Limpa as aulas
 AULAS_CLEAN=$(AULAS:=.clean)
@@ -28,7 +28,7 @@ aulas: $(AULAS)
 # Compila cada aula
 $(AULAS):
 	@echo "$(CURSPACES)Compilando aula $@"
-	$(MAKE) -sC $@
+	$(MAKE) -sC $@ all
 
 # Limpa a aula
 $(AULAS_CLEAN):
