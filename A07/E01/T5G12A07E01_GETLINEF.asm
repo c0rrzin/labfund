@@ -1,5 +1,6 @@
-; GETLINEF
-
+;========================================
+; Arquivo com a rotina GETLINEF
+;========================================
 
 GETLINEF >
 GL_END >
@@ -13,17 +14,27 @@ CONST_2 <
 
 & /0100
 
+; Constantes
 GL_CONST_EOL K /0D0A
 GL_CONST_EOF K /FFFF
+GL_CONST_300 K /0300
 
+;========================================
+; GETLINEF4
+; -------
+; Parametros: 
+;     UNPACK_1 : Endereço de B1
+;     UNPACK_2 : Endereço de B2
+;     UNPACK_3 : Endereço de B3
+;     UNPACK_4 : Endereço de B4
+; Retorno:
+;     AC       : 0 se acabou o arquivo, 1 caso contrário
+;========================================
 GL_END K /0000
 GL_UL K /0000
 GL_BUF K /0000
-
-GL_IS_EOF        K /0000
-GL_CURRENT       K /0000
-GL_CONST_300     K /0300
-
+GL_IS_EOF  K /0000
+GL_CURRENT K /0000
 GETLINEF K /0000
 	; Cria a instrução get data
 	LD GL_UL
@@ -31,8 +42,8 @@ GETLINEF K /0000
 	+ CONST_GD
 	MM GETLINEF_GD_INSTR
 
-	; Zera o parametro EOF
-	LV /0000
+	; Reseta o parametro EOF
+	LV /0001
 	MM GL_IS_EOF
 
 	; Retorna se o buffer é vazio
@@ -80,7 +91,7 @@ GETLINEF_EOL $ =0
 
 ; Fim do arquivo
 GETLINEF_EOF $ =0
-	LV /0001
+	LV /0000
 	MM GL_IS_EOF
 	JP GETLINEF_EOS
 
