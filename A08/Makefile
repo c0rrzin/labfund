@@ -7,7 +7,7 @@ TOPDIR=${CURDIR}/../
 include ${TOPDIR}/UsedVars.mk
 
 # Exercícios a serem compilados
-EXCERCISES := E01
+EXCERCISES := E01 E02
 
 # Limpa os objetos
 EXCERCISES_CLEAN:=$(EXCERCISES:=.clean)
