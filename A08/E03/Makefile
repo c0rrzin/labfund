@@ -7,11 +7,11 @@ TOPDIR=${CURDIR}/../../
 include ${TOPDIR}/UsedVars.mk
 
 # Arquivos fontes
-SRCS=T5G12A03E02_main_13.asm \
-	T5G12A03E02_const_13.asm \
-	T5G12A03E02_rotinas_13.asm
+SRCS=T5G12A08E03_main.asm \
+	T5G12A08E03_dumper.asm
 
-OUT=T5G12A03E02.mvn
+
+OUT=T5G12A08E03.mvn
 BASE_RELOCACAO=0000
 ENDERECO_INICIO=000
 
