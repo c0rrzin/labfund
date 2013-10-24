@@ -1,0 +1,112 @@
+2022 0000 ; "DUMPER>"		;	DUMPER    >
+2000 0000 ; "DUMP_INI>"		;	DUMP_INI  >
+2002 0000 ; "DUMP_TAM>"		;	DUMP_TAM  >
+2004 0000 ; "DUMP_UL>"		;	DUMP_UL   >
+2006 0000 ; "DUMP_BL>"		;	DUMP_BL   >
+2008 0000 ; "DUMP_EXE>"		;	DUMP_EXE  >
+
+				;	          &   /0000
+
+; EXPORTS
+8000 0000		;	DUMP_INI  K   /0000  ;
+8002 0000		;	DUMP_TAM  K   /0000  ;
+8004 0000		;	DUMP_UL   K   /0000  ;
+8006 0000		;	DUMP_BL   K   /0000  ;
+8008 0000		;	DUMP_EXE  K   /0000  ;
+
+; CONSTANTES
+800a 0000		;	SUM       K   /0000  ;
+800c 0000		;	END       K   /0000  ;
+800e 0001		;	CONT      K   /0001  ;
+8010 ffff		;	MUM       K   /FFFF  ;
+8012 0000		;	ZERO      K   /0000  ;
+8014 0001		;	UM        K   /0001  ;
+8016 0002		;	DOIS      K   /0002  ;
+8018 0ffe		;	FFE       K   /0FFE  ;
+801a 0000		;	ENDFIM    K   /0000  ;
+801c 0000		;	DIFTMP    K   /0000  ;
+
+; GERADOR DE FUNCOES
+801e e300		;	DISC      K   /E300  ;
+8020 8000		;	LOAD      K   /8000  ;
+
+8022 0000		;	DUMPER    JP  /0000  ; inicio da subrotina
+a024 8004		;	          LD  DUMP_UL ; carrega o valor da UL
+a026 401e		;	          +   DISC   ; forma operacao de salvar no disco
+a028 9084		;	          MM  WRTE
+a02a a088		;	          SC  VALIDA  ; valida se o dump nao passara do ultimo endereco com os dados passados
+a02c 2080		;	          JN  FIMD     ; retorna -1 caso nao seja valido
+a02e 8000		;	          LD  DUMP_INI ; carrega o valor do endereco de inicio na contagem
+a030 900c		;	          MM  END      ; salva no endereco
+a032 a082		;	          SC  GRAVA    ; grava o endereco
+a034 8002		;	          LD  DUMP_TAM ; load tamanho total
+a036 a082		;	          SC  GRAVA    ; grava
+
+a038 800c		;	LOOP1     LD  END    ; pega o endereco inicial do bloco
+a03a a082		;	          SC  GRAVA  ; grava no disco
+a03c a09e		;	          SC  TAM    ; chama subrotina de achar tamanho do bloco e gravar
+a03e 800c		;	LOOP2     LD  END    ; carrega o contador
+a040 4020		;	          +   LOAD   ; faz funcao de load
+a042 9044		;	          MM  CARR   ; bota no proximo
+8044 0000		;	CARR      K   /0000  ;
+a046 a082		;	          SC  GRAVA  ;
+a048 400a		;	          +   SUM    ;
+a04a 900a		;	          MM  SUM    ;
+a04c 800e		;	          LD  CONT   ;
+a04e 501c		;	          -   DIFTMP    ; compara se é o ultimo do bloco
+a050 1060		;	          JZ  FIMB    ; acabou este bloco, grava e zera checksum checksum
+a052 800e		;	          LD  CONT   ; aumenta um no cont e 2 no END e reinicia o LOOP
+a054 4014		;	          +   UM     ;
+a056 900e		;	          MM  CONT   ;
+a058 800c		;	          LD  END    ; se nao, passa para o próximo e continua (next end)
+a05a 4016		;	          +   DOIS   ;
+a05c 900c		;	          MM  END    ;
+a05e 003e		;	          JP  LOOP2   ;
+a060 800a		;	FIMB      LD  SUM    ; carrega checksum
+a062 a082		;	          SC  GRAVA  ;
+a064 800c		;	          LD  END    ; pega o proximo endereco (o ENDFIM nao corresponde a area que o dump abrange)
+a066 4016		;	          +   DOIS   ;
+a068 501a		;	          -   ENDFIM ; ve se eh o ultimo do dump
+a06a 107c		;	          JZ  FIM    ; se sim, acaba a simulacao
+a06c 800c		;	          LD  END    ; se nao, gera proximo endereco e comeca o loop1 de novo
+a06e 4016		;	          +   DOIS   ;
+a070 900c		;	          MM  END    ;
+a072 8012		;	          LD  ZERO   ;
+a074 900a		;	          MM  SUM    ; zera as contagens (CONT inicial é 1)
+a076 8014		;	          LD  UM     ;
+a078 900e		;	          MM  CONT   ;
+a07a 0038		;	          JP  LOOP1   ; proximo bloco
+a07c 8008		;	FIM       LD  DUMP_EXE ;
+a07e a082		;	          SC  GRAVA    ;
+a080 b022		;	FIMD      RS  DUMPER
+
+8082 0000		;	GRAVA     JP  /0000  ;
+8084 0000		;	WRTE      K   /0000  ; funcao a ser gerada no inicio da DUMPER
+a086 b082		;	          RS  GRAVA  ;
+
+8088 0000		;	VALIDA    JP  /0000  ;
+a08a 8002		;	          LD  DUMP_TAM ;
+a08c 6016		;	          *   DOIS   ;
+a08e 4000		;	          +   DUMP_INI  ; (o endereco final de leitura)
+a090 901a		;	          MM  ENDFIM  ; salva como final do endereco
+a092 5018		;	          -   FFE    ; compara com FFE
+a094 209a		;	          JN  ISNEG   ;
+a096 8010		;	          LD  MUM     ;
+a098 009c		;	          JP  FIMV    ;
+a09a 8012		;	ISNEG     LD  ZERO      ;
+a09c b088		;	FIMV      RS  VALIDA ;
+
+809e 0000		;	TAM       JP  /0000  ;
+a0a0 801a		;	          LD ENDFIM  ;  pega o fim do endereco
+a0a2 500c		;	          -  END     ;  compara com o atual
+a0a4 7016		;	          /  DOIS    ;  transforma em unidade de contagem
+a0a6 901c		;	          MM DIFTMP  ; salva esta diferenca temporaria temporaria
+a0a8 5006		;	          -  DUMP_BL ;  compara com dump bl
+a0aa 20b4		;	          JN RDIF
+a0ac 8006		;	          LD DUMP_BL ; grava a diferenca
+a0ae 901c		;	          MM DIFTMP  ; grava na diferenca temporaria (sera usada depois)
+a0b0 a082		;	          SC GRAVA
+a0b2 00b8		;	          JP FIMT    ;
+a0b4 801c		;	RDIF      LD DIFTMP
+a0b6 a082		;	          SC GRAVA   ; grava o a diferenca
+a0b8 b09e		;	FIMT      RS TAM
