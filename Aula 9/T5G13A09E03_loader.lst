@@ -1,0 +1,106 @@
+2020 0000 ; "LOADER>"		;	LOADER    >
+2000 0000 ; "LOADER_UL>"		;	LOADER_UL   >
+
+
+				;	          &   /0000
+
+; VARIAVEIS EXPORTADAS
+8000 0000		;	LOADER_UL K   /0000  ;
+
+; CONSTANTES
+8002 0000		;	SUM       K   /0000  ;
+8004 0000		;	END       K   /0000  ;
+8006 0001		;	CONT      K   /0001  ;
+8008 ffff		;	MUM       K   /FFFF  ;
+800a 0000		;	ZERO      K   /0000  ;
+800c 0001		;	UM        K   /0001  ;
+800e 0002		;	DOIS      K   /0002  ;
+8010 0ffe		;	FFE       K   /0FFE  ;
+8012 0000		;	ENDFIM    K   /0000  ;
+8014 0000		;	DIFTMP    K   /0000  ;
+8016 0000		;	PTAM      K   /0000  ; variavel para salvar o tamanho do bloco
+
+; GERADORES DE FUNCAO
+8018 d300		;	DISC      K   /D300  ;
+801a 9000		;	SALVA     K   /9000  ;
+
+801c 0000		;	L_INI     K   /0000  ;
+801e 0000		;	L_TAM     K   /0000  ;
+
+8020 0000		;	LOADER    JP  /0000     ; inicio da subrotina
+a022 8000		;	          LD  LOADER_UL   ; carrega o valor da UL
+a024 4018		;	          +   DISC      ; forma operacao de pegar dado do disco
+a026 9092		;	          MM  READ
+a028 a090		;	          SC  LE        ; le o primeiro dado (endereco de inicio)
+a02a 9004		;	          MM  END       ; salva no endereco a ser usado
+a02c 901c		;	          MM  L_INI     ;
+a02e a090		;	          SC  LE        ; le o tamanho
+a030 901e		;	          MM  L_TAM     ;
+a032 a096		;	          SC  VALIDA    ; valida se o load nao passara do ultimo endereco com os dados passados
+; REFACTOR, enviar mensagem ao monitor ??
+a034 207e		;	          JN  FIML     ; retorna -1 caso nao seja valido
+; END REFACTOR
+a036 a090		;	LOOP      SC  LE        ;  le o endereco inicial do pacote
+a038 9004		;	          MM  END       ;  salva na variavel de endereco
+a03a 9002		;	          MM  SUM       ;  salva no valor de checksum
+a03c a090		;	          SC  LE        ;  LE o tamanho do pacote
+a03e 9016		;	          MM  PTAM      ;  salva no tamanho de bloco
+a040 4002		;	          +   SUM       ;  adiciona no checksum
+a042 9002		;	          MM  SUM       ;
+a044 8004		;	LOOP2     LD  END       ;  carrega o endereco
+a046 401a		;	          +   SALVA     ;  gera funcao de salvar
+a048 904c		;	          MM  TOMM      ;  guarda instrucao para ser executada
+a04a a090		;	          SC  LE        ;  LE dado do arquivo
+804c 0000		;	TOMM      K   /0000     ;  salva o dado na respectiva memoria
+a04e 4002		;	          +   SUM       ;  adiciona ao checksum
+a050 9002		;	          MM  SUM       ;
+a052 8006		;	          LD  CONT      ;
+a054 5016		;	          -   PTAM      ;  ve se eh o ultimo do bloco
+a056 1066		;	          JZ  ENDB      ;  se é o ultimo, chamar subrotina de conferir checksum
+a058 8006		;	          LD  CONT      ;  CASO CONTARIO, INCREMENTA END E CONT PARA CONTINUAR NO BLOCO
+a05a 400c		;	          +   UM        ;
+a05c 9006		;	          MM  CONT      ;
+a05e 8004		;	          LD  END       ;
+a060 400e		;	          +   DOIS      ;
+a062 9004		;	          MM  END       ;
+a064 0044		;	          JP  LOOP2
+a066 a080		;	ENDB       SC  CHECKSUM  ;
+a068 207e		;	          JN  FIML      ; SE NEGATIVO, CHECKSUM NAO BATEU, RETORNAR ROTINA
+a06a 800a		;	          LD  ZERO      ;
+a06c 9002		;	          MM  SUM       ;
+a06e 800c		;	          LD  UM        ;
+a070 9006		;	          MM  CONT      ;
+a072 8004		;	          LD  END       ; GERA O PROXIMO ENDERECO
+a074 400e		;	          +   DOIS      ;
+a076 5012		;	          -   ENDFIM    ; CONFERE SE É O ULTIMO ENDERECO
+a078 107c		;	          JZ  QFIM      ; SE SIM, ACABARAM OS BLOCOS
+a07a 0036		;	          JP  LOOP      ; SE NAO, VOLTA PARA INICIO DO LOOP
+a07c a090		;	QFIM      SC  LE        ;  carrega o endereco executavel para o acumulador
+a07e b020		;	FIML      RS  LOADER
+
+
+8080 0000		;	CHECKSUM  JP  /0000       ; subrotina de ler checksum
+a082 a090		;	          SC  LE          ; le o checksum do disco
+a084 5002		;	          -   SUM
+a086 108c		;	          JZ  CERTO       ; SE DEU 0, ESTA CERTO
+a088 8008		;	          LD  MUM         ; caso contrario, retorna 1 e para a exucacao
+a08a 008e		;	          JP  FIMC        ;
+a08c 800a		;	CERTO     LD  ZERO        ;
+a08e b080		;	FIMC      RS  CHECKSUM      ;  fim da subrotina
+
+8090 0000		;	LE        JP  /0000       ; subrotina de ler dado do disco
+8092 0000		;	READ      K   /0000       ; aqui sera guardada a instrucao de ler ( GD - /0300)
+a094 b090		;	          RS  LE          ; retorno da subrotina
+
+8096 0000		;	VALIDA    JP  /0000       ;  valida se o endereco final ainda é valido
+a098 801e		;	          LD  L_TAM    ; calcula o endereco final ( DUMP_INI + 2*(TAM))
+a09a 600e		;	          *   DOIS        ;
+a09c 401c		;	          +   L_INI    ; (o endereco final de leitura)
+a09e 9012		;	          MM  ENDFIM      ; salva como final do endereco (para uso posterior)
+a0a0 5010		;	          -   FFE         ; compara com FFE
+a0a2 20a8		;	          JN  ISNEG       ; se negativo, endereco esta dentro do limite, retorna 0
+a0a4 8008		;	          LD  MUM         ; caso contrario, retorna 1 e para a exucacao
+a0a6 00aa		;	          JP  FIMV        ;
+a0a8 800a		;	ISNEG     LD  ZERO        ;
+a0aa b096		;	FIMV      RS  VALIDA      ;  fim da subrotina
+

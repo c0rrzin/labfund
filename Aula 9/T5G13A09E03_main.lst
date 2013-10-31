@@ -1,0 +1,41 @@
+4000 0000 ; "LOADER<"		;	LOADER    <
+4001 0000 ; "LOADER_UL<"		;	LOADER_UL   <
+4002 0000 ; "DUMPER<"		;	DUMPER    <
+4003 0000 ; "DUMP_INI<"		;	DUMP_INI  <
+4004 0000 ; "DUMP_TAM<"		;	DUMP_TAM  <
+4005 0000 ; "DUMP_UL<"		;	DUMP_UL   <
+4006 0000 ; "DUMP_BL<"		;	DUMP_BL   <
+4007 0000 ; "DUMP_EXE<"		;	DUMP_EXE  <
+
+;========================= N�O ALTERE ESTE TRECHO: IN�CIO ===================;
+				;	& /0000
+a000 000c		;	MAIN      JP  START ; Salta para in�cio do main
+
+; PARAMETROS
+8002 0000		;	UL_TEST     K /0000 ; Unidade logica do disco a ser usado
+
+;========================== N�O ALTERE ESTE TRECHO: FIM =====================;
+
+; PARAMETROS
+8004 0400		;	END_INICIAL   K /0400 ; Endere�o onde come�a o dump  - 0400
+8006 000a		;	TAMANHO_TEST  K /000A ; Numero total de palavras a serem "dumpadas"  - 0032
+8008 0002		;	BL_TEST     K /0002 ; Tamanho do bloco  - 0010
+800a 0440		;	EXE_TEST    K /0440 ; Endere�o onde come�aria a execu��o (valor dummy, apenas para manter o formato)
+
+;========================== N�O ALTERE ESTE TRECHO: FIM =====================;
+
+a00c 8004		;	START     LD  END_INICIAL ; Parametros, na ordem acima
+d00e 9003		;	          MM  DUMP_INI
+a010 8006		;	          LD  TAMANHO_TEST
+d012 9004		;	          MM  DUMP_TAM
+a014 8002		;	          LD  UL_TEST
+d016 9005		;	          MM  DUMP_UL
+d018 9001		;	          MM  LOADER_UL ; Invoca loader
+a01a 8008		;	          LD  BL_TEST
+d01c 9006		;	          MM  DUMP_BL
+a01e 800a		;	          LD  EXE_TEST
+d020 9007		;	          MM  DUMP_EXE
+d022 a002		;	          SC  DUMPER    ; Invoca dumper
+d024 a000		;	          SC  LOADER
+a026 c026		;	FIM_MAIN  HM  FIM_MAIN  ; Fim do main
+

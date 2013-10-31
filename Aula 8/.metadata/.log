@@ -8,3 +8,11 @@ Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -product com.android.
 
 !ENTRY org.eclipse.core.net 1 0 2013-10-24 14:38:11.388
 !MESSAGE System property http.nonProxyHosts has been set to local|*.local|169.254/16|*.169.254/16 by an external source. This value will be overwritten using the values from the preferences
+
+!ENTRY org.eclipse.ui.ide 4 4 2013-10-24 19:21:31.015
+!MESSAGE Problems saving workspace
+
+!ENTRY org.eclipse.ui.ide 2 1 2013-10-24 19:21:31.045
+!MESSAGE Problems occurred while trying to save the state of the workbench.
+!SUBENTRY 1 org.eclipse.core.resources 2 234 2013-10-24 19:21:31.045
+!MESSAGE The project description file (.project) for 'mvn2013 3' was missing.  This file contains important information about the project.  A new project description file has been created, but some information about the project may have been lost.
