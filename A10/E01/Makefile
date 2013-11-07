@@ -8,8 +8,11 @@ include ${TOPDIR}/UsedVars.mk
 
 # Arquivos fontes
 SRCS=T5G12A10E01_main.asm \
-	T5G12A10E01_batch.asm
-
+	T5G12A10E01_batch.asm \
+	T5G12A10E01_rotinas.asm \
+	T5G12A10E01_dumper.asm \
+	T5G12A10E01_loader.asm \
+	T5G12A10E01_const.asm
 
 OUT=T5G12A10E01.mvn
 BASE_RELOCACAO=0000
