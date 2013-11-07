@@ -7,8 +7,8 @@ TOPDIR=${CURDIR}/../../
 include ${TOPDIR}/UsedVars.mk
 
 # Arquivos fontes
-SRCS=T5G12A10E01_dumper.asm \
-	T5G12A10E01_loader.asm
+SRCS=T5G12A10E01_main.asm \
+	T5G12A10E01_batch.asm
 
 
 OUT=T5G12A10E01.mvn
