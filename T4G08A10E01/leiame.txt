@@ -1,0 +1,48 @@
+Alguns detalhes sobre o MBS:
+- Usei o PACK e o UNPACK dos exercicios anteriores. Nao os deixei de formar relocavel e acabei
+incluindo diretamente no codigo do MBS.
+- Criei uma sub-rotina responsavel por converter o codigo ASCII. Ela é chamada pela rotina
+principal do MBS.
+- Nao criei um "main" para o MBS, pois nao vi sentido em fazer isso, afinal de contas, as
+operacoes que devem ser executadas sao descritas no arquivo.
+- O MBS consegue fazer um dump e tambem um load. Como eu acabei incorporando diversas outras
+sub-rotinas dentro dele (dumper, loader, pack, unpack e o conversor), seu tamanho acabou ficando
+a meu ver um pouco grande. Portanto, deve-se tomar cuidado pra nao sobrescrever suas instrucoes
+caso  um LOAD seja feito.
+
+Quantos aos fluxogramas:
+- Sim... o do MBS acabou ficando meio grande, mas tentei simplificar ao maximo e deixar da
+maneira mais legivel e explicativa possivel. Espero que nao tenha tantos problemas para a 
+correcao.
+- Nao tratei em cada detalhe os possiveis erros. Esses erros podem aparecer em diversos lugares
+e achei que so poluiria o fluxograma se eu os colocasse. Portanto, deixo claro que, apesar dos
+erros nao estarem no fluxograma, eles foram tratados no .asm
+- Como a sub-rotina CNV (conversor ASCII) faz parte do MBS, tambem fiz um fluxograma para ela.
+Nessa rotina conversora, nao inclui toooodos os if's de cada numero em HEX (0 a F).
+
+
+Quanto ao UnidadeControle.java:
+- Modifiquei apenas o instrucaoOS(), como pedido. A forma atual da modificacao esta bem simples
+e consultarei com algum monitor para saber se é aquilo mesmo ou se deve adicionar mais código.
+- Ela simplesmente verifica qual o ID do error e mostra uma mensagem de erro na tela. Nada mais.
+- Inclui separadamente no stoa a minha MVN completa. Para testar o funcionamento, coloquei
+dentro da pasta onde esta o .project e o .classpath do Eclipse os arquivos arq.txt, dump.txt,
+disp.lst e mbsf_rel.mvn.
+
+Meu disp.lst:
+0 0 mvn.dispositivo.Teclado
+1 0 mvn.dispositivo.Monitor
+3 0 mvn.dispositivo.Disco arq.txt b
+3 1 mvn.dispositivo.Disco dump.txt b
+
+Quanto ao Job pedido, o meu ficou assim (comentado e separando em linhas os parametros do dumper):
+//JOBb
+//DU
+0x0007 (tamanho do bloco... setei esse valor livremente)  
+0x0D00 (peguei simplesmente o primeiro endereco do cifra.mvn)  
+0x001A (sao 26 linhas no cifra.mvn, logo 1A em HEX - tamanho total) 
+0x0D00 (no end 0D00 ha um jump, logo, interpretei como a primeira instrucao executavel)
+0x0001 (unidade logica onde vai ser guardado o dump - dump.txt (1))
+//LO
+0x0001 (de onde vai ler arquivo binario)
+/*
