@@ -1,0 +1,89 @@
+; GETLINEF - MAIN
+
+2020 0000 ; "GETLINEF>"		;	GETLINEF >
+2000 0000 ; "GL_END>"		;	GL_END >
+2002 0000 ; "GL_UL>"		;	GL_UL >
+2004 0000 ; "GL_BUF>"		;	GL_BUF >
+
+				;	& /0000
+
+; CONSTANTES  EXPORTADAS
+8000 0000		;	GL_END        K  /0000
+8002 0000		;	GL_UL         K  /0000
+8004 0000		;	GL_BUF        K  /0000
+
+;CONSTANTES PROPRIAS
+8006 0001		;	UM            K  /0001
+8008 0002		;	DOIS          K  /0002
+800a d000		;	C_GETDATA     K  /D000
+800c 0300		;	DISCO         K  /0300
+800e 8000		;	LOAD          K  /8000
+8010 9000		;	SAVE          K  /9000
+
+8012 0000		;	COUNT         K  /0000
+8014 ffff		;	C_EOF         K  /FFFF      ; http://en.wikipedia.org/wiki/End-of-file  -> primeiro paragrafo
+8016 0d0a		;	C_EOL         K  /0D0A      ; cr + nl (ASCII)
+8018 0000		;	C_EOS         K  /0000      ; http://www.erg.abdn.ac.uk/~gorry/eg2069/ascii.html -> segundo metodo (usado em C tbm)
+
+801a 0000		;	RETURN        K  /0000
+
+801c 0000		;	VARTMP        K  /0000
+801e 0000		;	ENDTMP        K  /0000
+
+
+8020 0000		;	GETLINEF      JP /0000 ;
+
+8022 3000		;	              LV /0000
+a024 901a		;	              MM RETURN  ; seta o retorna default para 0x0
+
+a026 8002		;	              LD GL_UL      ; Forma funcao de pegar dado do disco selecionado
+a028 400c		;	              +  DISCO      ;
+a02a 400a		;	              +  C_GETDATA    ;
+a02c 903a		;	              MM GETDATA
+
+a02e 8004		;	              LD GL_BUF  ; guarda tamanha do buffer numa variavel que pode ser modificada
+a030 5006		;	              -  UM      ; lembrando que temos que reservar 1 word para escrever o EOS
+a032 9012		;	              MM COUNT
+
+a034 8000		;	              LD GL_END  ; guarda endereco de inicio numa variavel que pode ser modificada
+a036 901e		;	              MM ENDTMP
+
+a038 003a		;	LOOP          JP GETDATA
+803a 0000		;	GETDATA       K  /0000    ; pega a word a ser lida no arquivo
+a03c 901c		;	              MM VARTMP   ; salva na variavel temporaria
+
+a03e 5016		;	              -  C_EOL    ; se eh o final da linha, vai para final da linha
+a040 106a		;	              JZ EOS
+
+a042 801c		;	              LD VARTMP   ; se eh o final do arquivo, vai para final do arquivo
+a044 5014		;	              -  C_EOF
+a046 1066		;	              JZ EOF
+
+a048 801e		;	              LD ENDTMP   ; forma funcao de salvar
+a04a 4010		;	              +  SAVE     ;
+a04c 9054		;	              MM SAVE_BUF ; salva no endereco da vez
+a04e 4008		;	              +  DOIS
+a050 906c		;	              MM SAVE_EOS
+
+a052 801c		;	              LD VARTMP
+8054 0000		;	SAVE_BUF      K  /0000  ; salva no buffer
+
+a056 8012		;	              LD COUNT    ; checa se acabou o espaco disponível, se sim salva o fim da string
+a058 5006		;	              -  UM       ; caso contrario, continua
+a05a 9012		;	              MM COUNT
+a05c 106a		;	              JZ EOS
+a05e 801e		;	              LD ENDTMP
+a060 4008		;	              +  DOIS
+a062 901e		;	              MM ENDTMP
+a064 0038		;	              JP LOOP
+
+a066 8006		;	EOF           LD UM
+a068 901a		;	              MM RETURN
+
+a06a 8018		;	EOS           LD C_EOS  ; pega a constante de final da string e salva no buffer
+806c 0000		;	SAVE_EOS      K  /0000
+
+a06e 801a		;	GL_FIM        LD RETURN  ; salva o dado a retornar no acumulador
+a070 b020		;	              RS GETLINEF
+
+

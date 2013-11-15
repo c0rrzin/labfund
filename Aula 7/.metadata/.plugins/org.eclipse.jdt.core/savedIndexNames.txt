@@ -1,0 +1,2 @@
+INDEX VERSION 1.126+/Users/thalescantafaro/3-Quadrimestre/PCS 2024 - Lab Fund/labfund/Aula 7/.metadata/.plugins/org.eclipse.jdt.core
+3980093166.index
