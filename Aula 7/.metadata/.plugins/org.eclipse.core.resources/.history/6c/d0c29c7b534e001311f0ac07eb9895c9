@@ -305,27 +305,12 @@ public class Disco implements Dispositivo{
 	
 	@Override
 	public Bits8 position() throws MVNException{
-		if (!podeLer()) {
-			throw new MVNException(ERR_WRITEONLYDEVICE, this);
-		}
-		try {
-			return new Bits8((int) inFile.getChannel().position());
-		} catch (IOException e) {
-			throw new MVNException(ERR_IOERROR, this);
-		}
+		return null;
 	}
 	
 	
 	@Override
 	public void reset() throws MVNException{
-		if (!podeLer()) {
-			throw new MVNException(ERR_WRITEONLYDEVICE, this);
-		}
-		try {
-			inFile.getChannel().position(0);
-		} catch (IOException e) {
-			throw new MVNException(ERR_IOERROR, this);
-		}
 	}
 	
 	

@@ -455,8 +455,7 @@ public class GerenciadorDispositivos{
 	 */
 	public Bits8 posicaoLeitura(int deviceType, int logicalUnit)
 			throws MVNException{
-		Dispositivo dispositivo = getDevice(deviceType, logicalUnit);
-		return dispositivo.position();
+		return null;
 	}
 
 

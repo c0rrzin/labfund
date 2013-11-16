@@ -22,13 +22,16 @@ a000 001a		;	MAIN  JP  START
 8018 0000		;	BUFFER  $   /000A   ; Buffer: algumas posi��es reservadas   12
 				;	BUFFER  $   /000A   ; Buffer: algumas posi��es reservadas
 
-
-a01a 8004		;	START   LD  VAL_BUF     ; Param 1: tamanho do buffer
-d01c 9003		;	        MM  GL_BUF
-a01e 8002		;	        LD  VAL_UL    ; Param 2: unidade l�gica
-d020 9002		;	        MM  GL_UL
-a022 3006		;	        LV  BUFFER    ; Param 3: endere�o do buffer
-d024 9001		;	        MM  GL_END
-d026 a000		;	        SC  GETLINEF  ; Chama subrotina
-a028 c028		;	END     HM  END     ; fim do programa
+801a d301		;	START    GD /301    ;
+a01c 0020		;	         JP DOOS
+801e 0001		;	         K  /0001    ;parametro a ser passado
+8020 f1ff		;	DOOS     OS /01FF
+;        LD  VAL_BUF     ; Param 1: tamanho do buffer
+;        MM  GL_BUF
+;        LD  VAL_UL    ; Param 2: unidade l�gica
+;        MM  GL_UL
+;        LV  BUFFER    ; Param 3: endere�o do buffer
+;        MM  GL_END
+;        SC  GETLINEF  ; Chama subrotina
+a022 c022		;	END     HM  END     ; fim do programa
 

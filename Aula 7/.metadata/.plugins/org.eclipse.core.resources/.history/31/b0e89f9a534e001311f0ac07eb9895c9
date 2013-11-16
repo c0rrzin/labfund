@@ -430,8 +430,7 @@ public class GerenciadorDispositivos{
 	 */
 	public void reiniciarLeitura(int deviceType, int logicalUnit)
 			throws MVNException{
-		Dispositivo dispositivo = getDevice(deviceType, logicalUnit);
-		dispositivo.reset();
+				Dispositivo dispositivo = getDevice(deviceType, logicalUnit);
 	}
 
 
@@ -455,8 +454,7 @@ public class GerenciadorDispositivos{
 	 */
 	public Bits8 posicaoLeitura(int deviceType, int logicalUnit)
 			throws MVNException{
-		Dispositivo dispositivo = getDevice(deviceType, logicalUnit);
-		return dispositivo.position();
+		return null;
 	}
 
 

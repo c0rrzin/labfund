@@ -1,0 +1,8 @@
+
+
+0000 d301   ; START    GD /301    ;
+0002 0006   ;          JP DOOS
+0004 0001   ;          K  /0001    ;parametro a ser passado
+0006 f1ff   ; DOOS     OS /01FF
+
+0008 c008   ; END     HM  END     ; fim do programa
