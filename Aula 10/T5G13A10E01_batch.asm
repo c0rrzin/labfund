@@ -8,6 +8,16 @@ DUMP_EXE    <
 LOADER      <
 LOADER_UL   <
 
+CHTOUI      <
+DP1         <
+DP2         <
+DP3         <
+
+PACK        <
+
+UM          <
+CINCO       < 
+
 
 BATCH >
 
@@ -23,6 +33,8 @@ C_LO          K  /4C4F        ; LO
 
 C_GD          K  /D000        ; GD
 VARTMP        K  /0000        ; variavel temporaria
+VARTMP2       K  /0000        ; outra var tmp
+DU_CNT        K  /0000        ;
 
 BATCH_UL      K  /0300        ;
 
@@ -62,11 +74,80 @@ GET_CMD_2     SC GET_DATA     ; pega nome do comando
               LV /0002        ; se nao foi erro
               JP ERROR        ;
 
-DO_THE_DUMP   SC GET_DATA     ; comeca a pegar os dados do dump
-              JP FIM          ;
+DO_THE_DUMP   LD CINCO        ; zerando o contador
+              MM DU_CNT       ; 
+              JP DU_LOOP      ; (nao precisa checar db spaces agora)
 
-DO_THE_LOAD   SC GET_DATA     ; comeca a pegar os dados do load
-              JP FIM          ;
+DU_PRE_LOOP   SC GET_DATA     ;
+              -  C_DB_SP      ; checa se o proximo 
+              JZ DU_LOOP
+              LV /0003
+              JP ERROR
+
+DU_LOOP       SC GET_DATA     ; comeca a pegar os dados do dump
+              SC CHTOUI       ; transforma de ascii para bin (EX: 3233 -> 0023)
+              MM DP1          ; 
+              SC GET_DATA     ; pega a segunda parte do dado
+              SC CHTOUI       ; transforma de ascii para bin
+              MM DP2          ; 
+              SC PACK         ; palavra no acumulador (e em DP3)
+
+              LD DU_CNT       ;
+              -  CINCO
+              JZ DU_1_PRM
+              +  UM
+              JZ DU_2_PRM
+              +  UM
+              JZ DU_3_PRM
+              +  UM
+              JZ DU_4_PRM
+              +  UM
+              JZ DU_5_PRM
+
+DU_1_PRM      LD DU_CNT
+              -  UM 
+              MM DU_CNT
+              LD DP3          ; a palavra a ser salva
+              MM DUMP_BL     ; salva no parametro tamanho do dump
+              JP DU_PRE_LOOP      ;
+
+DU_2_PRM      LD DU_CNT
+              -  UM 
+              MM DU_CNT
+              LD DP3          ; a palavra a ser salva
+              MM DUMP_INI     ; salva no parametro endereco inicial do dump
+              JP DU_PRE_LOOP      ;
+
+DU_3_PRM      LD DU_CNT
+              -  UM 
+              MM DU_CNT
+              LD DP3          ; a palavra a ser salva
+              MM DUMP_TAM     ; salva no parametro tamanho do dump
+              JP DU_PRE_LOOP      ;
+
+DU_4_PRM      LD DU_CNT
+              -  UM 
+              MM DU_CNT
+              LD DP3          ; a palavra a ser salva
+              MM DUMP_EXE     ; salva no parametro tamanho do dump
+              JP DU_PRE_LOOP      ;
+
+DU_5_PRM      LD DP3              ; a palavra a ser salva
+              MM DUMP_UL          ; salva no parametro tamanho do dump
+              SC DUMPER           ; chama subrotina de dump
+              JP GET_CMD          ; volta a area de comandos
+
+
+DO_THE_LOAD   SC GET_DATA     ; comeca a pegar os dados do dump
+              SC CHTOUI       ; transforma de ascii para bin (EX: 3233 -> 0023)
+              MM DP1          ; 
+              SC GET_DATA     ; pega a segunda parte do dado
+              SC CHTOUI       ; transforma de ascii para bin
+              MM DP2          ; 
+              SC PACK         ; palavra no acumulador (e em DP3)
+              MM LOADER_UL        ; salva no loader UL 
+              SC LOADER           ; ihaaaa
+              JP GET_CMD          ;
 
 ERROR         JP SHOW_ERROR 
               K  /0001        ; numero da ul do erro * (so por ser preciso passar um parametro)

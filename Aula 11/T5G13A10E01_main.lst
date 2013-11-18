@@ -1,0 +1,9 @@
+4000 0000 ; "BATCH<"		;	BATCH <
+
+				;	        &  /0000 ;
+
+d000 a000		;	INIT    SC BATCH
+a002 c002		;	FIM     HM FIM
+
+
+

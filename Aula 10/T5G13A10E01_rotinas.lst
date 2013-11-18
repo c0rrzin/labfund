@@ -1,0 +1,183 @@
+2030 0000 ; "DP1>"		;	DP1           >               ; primeiro caractere a ser packed
+2032 0000 ; "DP2>"		;	DP2           >               ; segundo caractere a ser packed
+2034 0000 ; "DP3>"		;	DP3           >               ; word packed a ser expertada
+203c 0000 ; "CHTOUI>"		;	CHTOUI        > 
+;UITOCH        >
+2064 0000 ; "PACK>"		;	PACK          >
+
+2000 0000 ; "UM>"		;	UM            >
+2008 0000 ; "CINCO>"		;	CINCO         >
+
+
+				;	              &  /0000        ;
+
+8000 0001		;	UM            K  /0001        ;
+8002 0002		;	DOIS          K  /0002        ;
+8004 0003		;	TRES          K  /0003        ;
+8006 0004		;	QUATRO        K  /0004        ;
+8008 0005		;	CINCO         K  /0005        ;
+800a 0010		;	DZES          K  /0010        ;
+800c 0100		;	DCES          K  /0100        ;
+800e 1000		;	GIGAS         K  /1000        ;
+8010 ffff		;	MUM           K  /FFFF        ;
+8012 0030		;	TTA0          K  /0030        ;
+8014 003a		;	TTAA          K  /003A        ;
+8016 0041		;	QTA1          K  /0041        ;
+8018 004b		;	QTA7          K  /004B        ;
+801a 0000		;	IT            K  /0000        ;
+801c 0000		;	IT2           K  /0000        ;
+801e 000a		;	CA            K  /000A        ;
+8020 0000		;	VARTMP        K  /0000        ;
+8022 0000		;	VARTMP2       K  /0000        ;
+
+8024 4c49		;	DC1       K  'LI        ; primeiro palavra em ASCHII a ser transofrmada em HEXA (/3132)
+8026 584f		;	DC2       K  'XO        ; segunda plavra em ASCHII a ser transofrmada em HEXA (/3334)
+8028 0000		;	DC3       k  /0000      ; uniao das transformacoes (/1234)
+802a 8000		;	DUI1      K  /8000      ; Palavra em HEXA a ser transformada em ASCHII
+802c 0000		;	DUI2      K  /0000      ; resultado 1
+802e 0000		;	DUI3      K  /0000      ; resultado 2
+8030 0000		;	DP1       K  /0000      ; primeiro caractere a ser packed
+8032 0000		;	DP2       K  /0000      ; segundo caractere a ser packed
+8034 0000		;	DP3       K  /0000      ; word packed a ser expertada
+8036 0000		;	DU1       K  /0000      ; word a ser unpacked
+8038 0000		;	DU2       K  /0000      ; primeiro caracter da word unpacked
+803a 0000		;	DU3       K  /0000      ; segundo caractere da word unpacked
+
+803c 0000		;	CHTOUI    JP /0000      ; endereco de retorno da subrotina
+a03e 9036		;	          MM DU1        ; salva do acumulador para variavel de unpack
+a040 a070		;	          SC UNPACK     ; chama a subrotina de unpack
+a042 803a		;	          LD DU3        ; carrega o primeiro caractere (/0031)
+a044 9020		;	          MM VARTMP     ; salva na variavel temporaria
+a046 a084		;	          SC TFORM      ; chama subrotina de transformacao
+a048 205a		;	          JN END1       ; se o retorno for negativo, palavra invalida, retorna o que ja esta no acumulador
+a04a 9022		;	          MM VARTMP2    ; 
+a04c 8038		;	          LD DU2        ; carrega o segundo caracter
+a04e 9020		;	          MM VARTMP     ; carrega em var temp
+a050 a084		;	          SC TFORM      ; chama sub rotina de transformacao
+a052 205a		;	          JN END1       ; se negativo, caractere invalido, retorna
+a054 600a		;	          *  DZES       ; 
+a056 4022		;	          +  VARTMP2    ;
+a058 0062		;	          JP ENDCTU     ;
+805a 3005		;	END1      LV /0005      ; carrega o erro 3
+a05c 0060		;	          JP SHOW_ERR1  ;
+805e 0000		;	          K  /0000      ;
+8060 f0ee		;	SHOW_ERR1 OS /00EE      ; 
+
+a062 b03c		;	ENDCTU    RS CHTOUI     ; retorno da subrotina
+
+8064 0000		;	PACK      JP /0000      ; endereco de volta da subrotina
+a066 8030		;	          LD DP1        ; Carrega o dado 1;
+a068 600c		;	          *  DCES       ; Desloca 2 bytes para esquerda
+a06a 4032		;	          +  DP2        ; LOAD com dado 2
+a06c 9034		;	          MM DP3        ; salva no dado 3
+a06e b064		;	          RS PACK       ; Chama fim de subrotina
+
+8070 0000		;	UNPACK    JP /0000      ; endereco de volta da subrotina
+a072 8036		;	          LD DU1        ; Carrega o dado 1;  EX : 2002
+a074 700c		;	          /  DCES       ; desloca 2 bytes para a direita  EX: 0020
+a076 9038		;	          MM DU2        ; salva no primeiro dado de saida
+a078 600c		;	          *  DCES       ; desloca 2 bytes para a esquerda EX: 2000
+a07a 903a		;	          MM DU3        ; salva na saida s2 para buscar depois
+a07c 8036		;	          LD DU1        ; carrega o dado de entrada EX : 2002
+a07e 503a		;	          -  DU3        ; faz menos o primeiro dado salvo EX : 0002
+a080 903a		;	          MM DU3        ; salva o real valor na saida S1
+a082 b070		;	          RS UNPACK     ; return
+
+8084 0000		;	TFORM     JP /0000      ; endereco de volta da subrotina
+a086 8020		;	          LD VARTMP     ; carega a variavel
+a088 5012		;	          -  TTA0       ; tira trinta
+a08a 20b2		;	          JN FIMT       ; se negativo, caractere invalido, retorna negativo
+a08c 8020		;	          LD VARTMP     ; se nao, recarrega valor da variavel
+a08e 5014		;	          -  TTAA       ; tira 3A
+a090 20a2		;	          JN TM30       ; o numero é entro 0 e 9, retirar 30 e salvar na variavel de caractere
+a092 8020		;	          LD VARTMP     ; se nao, recarrega o valor da variavel
+a094 5016		;	          -  QTA1       ; tira 41
+a096 20b2		;	          JN FIMT       ; se negativo, caractere invalido, retorna o numero negativo
+a098 8020		;	          LD VARTMP     ; se nao, recarrega o valor da variavel
+a09a 5018		;	          -  QTA7       ; retira 47
+a09c 20aa		;	          JN TMAF       ; se negativo, "numero" entre A e F, retirar 40 e salvar na variavel de caractere
+a09e 8010		;	          LD MUM        ; se nao, retornar negativo
+a0a0 00b2		;	          JP FIMT       ; chama fim da subrotina
+a0a2 8020		;	TM30      LD VARTMP     ; carrega o numero a ser salvo
+a0a4 5012		;	          -  TTA0       ; retira 30
+a0a6 9020		;	          MM VARTMP     ; salva o numero
+;          SC SAVE       ; chama subrotina de salvar no caractere devido
+a0a8 00b2		;	          JP FIMT       ; retorna
+a0aa 8020		;	TMAF      LD VARTMP     ; carrega o numero de A a F a ser transformado
+a0ac 5016		;	          -  QTA1       ; tira 41
+a0ae 401e		;	          +  CA         ; adiciona a constante /000A
+a0b0 9020		;	          MM VARTMP     ; salva na variavel
+;          SC SAVE       ; salva no devido caractere
+a0b2 b084		;	FIMT      RS TFORM      ; retorno da subrotina de transformacao
+
+;UITOCH    JP /0000        ; retorno de subrotina
+;INITUI    LD DUI1         ; carrega palavra a ser desmontada
+;          MM DU1          ; salva na constante de unpack
+;          SC UNPACK       ; chama unpack
+;LOOP1     LD VAREND2      ; carrega o endereco da atual word INICIO DO LOOP
+;          +  LOAD         ; gera funcao de dar LOAD
+;          MM LOAD3        ; salva no proximo endereco
+;LOAD3     K  /0000        ; carrega o endereco da word unpacked
+;          MM VARTMP       ; salva na variavel temporaria
+;          /  DZES         ; divide po /0010 (pega o valor da "dezena")
+;          MM VARTMP2      ; salva em vartmp2
+;          *  DZES         ; multiplica por /0010 (agora temos a dezena em si)
+;          MM VARTMP2      ; (salva na variavel)
+;          LD VARTMP       ; carrega
+;          -  VARTMP2      ; pegou a "unidade" ( Ex 12 - 10 = 02)
+;          MM VARTMP2      ; salva
+;          LD VARTMP       ; gera a dezena de novo
+;          /  DZES         ;
+;          MM VARTMP       ;
+;          SC TFMUI        ; gera subrotina de salvar o valor certo
+;          LD VARTMP2      ; carrega a proxima unidade
+;          MM VARTMP       ; salva na variavel a ser transformada
+;          SC TFMUI        ; gera subrotina de salvar o valor certo
+;          LD IT2          ; carrega constante de iteracoes
+;          +  UM           ; adiciona um
+;          MM IT2          ; salava em IT2
+;          -  DOIS         ; ve se ja foram quatro iteracoes
+;          JZ JOIN2        ; pula para a parte de unir todos os 4 caracteres
+;          LD VAREND2      ; se nao, carrega o endereco
+;          +  DOIS         ; soma 2
+;          MM VAREND2      ; salva na variavel de endereco
+;          JP LOOP1        ; retorna para o comeco do loop
+;JOIN2     LD CHAR1        ; load primeiro caractere
+;          *  DCES         ;
+;          +  CHAR2        ; junta com o segundo caractere
+;          MM DUI2         ;
+;          LD CHAR3        ; junta com o terceiro caractere
+;          *  DCES         ;
+;          +  CHAR4        ; junta com o quarto caractere
+;          MM DUI3         ;
+;END2      RS UITOCH       ; retornar
+
+;TFMUI     JP /0000        ; retorno de subrotina
+;          LD VARTMP       ; carega a variavel
+;          -  CA           ; tira 000A
+;          JN TMU30        ; se negativo, caractere entre 0 e 9, adiciona 30 e salva
+;TMUAF     LD VARTMP       ; se nao, caractere entre A e F, tira CA e adiciona 00041
+;          -  CA           ; tira 000A
+;          +  QTA1         ; adiciona 41
+;          MM VARTMP       ; salva o valor certo
+;          SC SAVEUI       ; sava no caractere devido
+;          JP FIMTFU       ; pula para fim da subrotina
+;TMU30     LD VARTMP       ; se nao, recarrega o valor da variavel
+;          +  TTA0         ; soma 30
+;          MM VARTMP       ; salva o valor certo
+;          SC SAVEUI       ; chama subrotina de salvar no caractere devido
+;FIMTFU    RS TFMUI
+
+
+;SAVEUI    JP /0000        ; endereco de retorno da subrotina
+;          LD CHAREND2     ; carrega o endereco da variavel
+;          +  SV           ; gera funcao de dar save
+;          MM SV2          ; salva a instrucao
+;          LD VARTMP       ; carrega a variavel
+;SV2       K  /0000        ; salva no endereco
+;          LD CHAREND2     ; cerrega a variavel, transforma no proximo endereco e salva.
+;          +  DOIS         ;
+;          MM CHAREND2     ;
+;          RS SAVEUI       ;
+
+
