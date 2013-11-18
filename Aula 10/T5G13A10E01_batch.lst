@@ -1,0 +1,87 @@
+4000 0000 ; "DUMPER<"		;	DUMPER      <
+4001 0000 ; "DUMP_INI<"		;	DUMP_INI    <
+4002 0000 ; "DUMP_TAM<"		;	DUMP_TAM    <
+4003 0000 ; "DUMP_UL<"		;	DUMP_UL     <
+4004 0000 ; "DUMP_BL<"		;	DUMP_BL     <
+4005 0000 ; "DUMP_EXE<"		;	DUMP_EXE    <
+
+4006 0000 ; "LOADER<"		;	LOADER      <
+4007 0000 ; "LOADER_UL<"		;	LOADER_UL   <
+
+
+2014 0000 ; "BATCH>"		;	BATCH >
+
+				;	              &  /0000 ;
+
+8000 2f2f		;	C_DB_SLASH    K  /2F2F        ; //
+8002 200a		;	C_EOL         K  /200A        ; space + EOL 
+8004 2020		;	C_DB_SP       K  /2020        ; space + space
+8006 2f2a		;	C_EOF         K  /2F2A        ; /*
+8008 4a42		;	C_JB          K  /4A42        ; JB
+800a 4455		;	C_DU          K  /4455        ; DU
+800c 4c4f		;	C_LO          K  /4C4F        ; LO
+
+800e d000		;	C_GD          K  /D000        ; GD
+8010 0000		;	VARTMP        K  /0000        ; variavel temporaria
+
+8012 0300		;	BATCH_UL      K  /0300        ;
+
+8014 0000		;	BATCH         JP /0000        ; inicio da rotina
+
+a016 800e		;	              LD C_GD         ; formando rotina de GET_DATA
+a018 4012		;	              +  BATCH_UL     ; 
+a01a 905e		;	              MM S_GET_DATA   ;
+
+a01c a05c		;	GET_JOB_SL    SC GET_DATA     ; pega primeiro dado (Expected //)
+a01e 5000		;	              -  C_DB_SLASH   ;
+a020 1026		;	              JZ GET_JOB_ST   ; se é // ok, se nao imprime erro e para
+8022 3001		;	              LV /0001
+a024 0054		;	              JP ERROR        ;
+
+a026 a05c		;	GET_JOB_ST    SC GET_DATA     ; pega o segundo dado (Expected JB)
+a028 5008		;	              -  C_JB         ; 
+a02a 1030		;	              JZ GET_CMD      ; se é JB vai para CMD, se nao, impreime erro e para
+802c 3001		;	              LV /0001
+a02e 0054		;	              JP ERROR        ;
+
+a030 a05c		;	GET_CMD       SC GET_DATA     ; checa double slash
+a032 5000		;	              -  C_DB_SLASH   ;
+a034 103a		;	              JZ GET_CMD_2    ;
+8036 3002		;	              LV /0002        ;
+a038 0054		;	              JP ERROR        ;
+
+a03a a05c		;	GET_CMD_2     SC GET_DATA     ; pega nome do comando
+a03c 9010		;	              MM VARTMP       ;
+a03e 500a		;	              -  C_DU         ; vai para DUMP 
+a040 104c		;	              JZ DO_THE_DUMP  ;
+
+a042 8010		;	              LD VARTMP       ; 
+a044 500c		;	              -  C_LO         ;
+a046 1050		;	              JZ DO_THE_LOAD  ; vai para o LOAD
+
+8048 3002		;	              LV /0002        ; se nao foi erro
+a04a 0054		;	              JP ERROR        ;
+
+a04c a05c		;	DO_THE_DUMP   SC GET_DATA     ; comeca a pegar os dados do dump
+a04e 005a		;	              JP FIM          ;
+
+a050 a05c		;	DO_THE_LOAD   SC GET_DATA     ; comeca a pegar os dados do load
+a052 005a		;	              JP FIM          ;
+
+a054 0058		;	ERROR         JP SHOW_ERROR 
+8056 0001		;	              K  /0001        ; numero da ul do erro * (so por ser preciso passar um parametro)
+8058 f0ee		;	SHOW_ERROR    OS /00EE        ; chama a mensagem de erro
+
+a05a b014		;	FIM           RS BATCH        ; retorna
+
+805c 0000		;	GET_DATA      JP /0000        ; inicio da rotina de GD 
+805e 0000		;	S_GET_DATA    K  /0000        ; precisa ser previamente salvo com o comando de GD na UL certa
+a060 9010		;	              MM VARTMP       ; salva na variavel temporaria
+a062 5002		;	              -  C_EOL        ; ve se é fim de linha, se sim pega o dado de novo
+a064 105e		;	              JZ S_GET_DATA   ;
+a066 8010		;	              LD VARTMP       ; recarrega o dado carregado
+a068 5006		;	              -  C_EOF        ;
+a06a 105a		;	              JZ FIM          ; retorna a sub rotina do batch caso seja fim do arquivo
+a06c 8010		;	              LD VARTMP       ;
+a06e b05c		;	              RS GET_DATA     ;
+

@@ -1,0 +1,4 @@
+0 0 mvn.dispositivo.Teclado
+1 0 mvn.dispositivo.Monitor
+3 00 mvn.dispositivo.Disco batch.txt l
+3 01 mvn.dispositivo.Disco disco0.bin b
