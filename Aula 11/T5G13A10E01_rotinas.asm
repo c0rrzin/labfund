@@ -6,6 +6,7 @@ CHTOUI        >
 PACK          >
 
 UM            >
+DOIS          >
 CINCO         >
 
 

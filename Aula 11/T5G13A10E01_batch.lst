@@ -16,10 +16,11 @@
 4012 0000 ; "PACK<"		;	PACK        <
 
 4013 0000 ; "UM<"		;	UM          <
-4014 0000 ; "CINCO<"		;	CINCO       < 
+4014 0000 ; "DOIS<"		;	DOIS        <
+4015 0000 ; "CINCO<"		;	CINCO       < 
 
 
-2018 0000 ; "BATCH>"		;	BATCH >
+2026 0000 ; "BATCH>"		;	BATCH >
 
 				;	              &  /0000 ;
 
@@ -30,139 +31,268 @@
 8008 4a42		;	C_JB          K  /4A42        ; JB
 800a 4455		;	C_DU          K  /4455        ; DU
 800c 4c4f		;	C_LO          K  /4C4F        ; LO
+800e 434c		;	C_CL          K  /434C        ; CL
 
-800e d000		;	C_GD          K  /D000        ; GD
-8010 0000		;	VARTMP        K  /0000        ; variavel temporaria
-8012 0000		;	VARTMP2       K  /0000        ; outra var tmp
-8014 0000		;	DU_CNT        K  /0000        ;
+8010 d000		;	C_GD          K  /D000        ; GD
 
-8016 0300		;	BATCH_UL      K  /0300        ;
+8012 0000		;	CL_CUR_ADD    K  /0000
 
-8018 0000		;	BATCH         JP /0000        ; inicio da rotina
+8014 f0c0		;	CL_OS         K  /F0C0        ; OS
 
-a01a 800e		;	              LD C_GD         ; formando rotina de GET_DATA
-a01c 4016		;	              +  BATCH_UL     ; 
-a01e 90da		;	              MM S_GET_DATA   ;
+8016 0000		;	VARTMP        K  /0000        ; variavel temporaria
+8018 0000		;	VARTMP2       K  /0000        ; outra var tmp
+801a 0000		;	DU_CNT        K  /0000        ;
+801c 0100		;	DCSEIS        K  /0100        ;
+801e 9000		;	SAVE          K  /9000        ;
 
-a020 a0d8		;	GET_JOB_SL    SC GET_DATA     ; pega primeiro dado (Expected //)
-a022 5000		;	              -  C_DB_SLASH   ;
-a024 102a		;	              JZ GET_JOB_ST   ; se é // ok, se nao imprime erro e para
-8026 3001		;	              LV /0001
-a028 00d0		;	              JP ERROR        ;
+8020 000a		;	CL_N_PARAMS   K  /000A        ; 
+8022 0000		;	CL_PARAMS_CNT K  /0000        ;
 
-a02a a0d8		;	GET_JOB_ST    SC GET_DATA     ; pega o segundo dado (Expected JB)
-a02c 5008		;	              -  C_JB         ; 
-a02e 1034		;	              JZ GET_CMD      ; se é JB vai para CMD, se nao, impreime erro e para
-8030 3001		;	              LV /0001
-a032 00d0		;	              JP ERROR        ;
+8024 0300		;	BATCH_UL      K  /0300        ;
 
-a034 a0d8		;	GET_CMD       SC GET_DATA     ; checa double slash
-a036 5000		;	              -  C_DB_SLASH   ;
-a038 103e		;	              JZ GET_CMD_2    ;
-803a 3002		;	              LV /0002        ;
-a03c 00d0		;	              JP ERROR        ;
+8026 0000		;	BATCH         JP /0000        ; inicio da rotina
 
-a03e a0d8		;	GET_CMD_2     SC GET_DATA     ; pega nome do comando
-a040 9010		;	              MM VARTMP       ;
-a042 500a		;	              -  C_DU         ; vai para DUMP 
-a044 1050		;	              JZ DO_THE_DUMP  ;
+a028 8010		;	              LD C_GD         ; formando rotina de GET_DATA
+a02a 4024		;	              +  BATCH_UL     ; 
+a02c 91b8		;	              MM S_GET_DATA   ;
 
-a046 8010		;	              LD VARTMP       ; 
-a048 500c		;	              -  C_LO         ;
-a04a 10bc		;	              JZ DO_THE_LOAD  ; vai para o LOAD
+a02e a1b6		;	GET_JOB_SL    SC GET_DATA     ; pega primeiro dado (Expected //)
+a030 5000		;	              -  C_DB_SLASH   ;
+a032 1038		;	              JZ GET_JOB_ST   ; se é // ok, se nao imprime erro e para
+8034 3001		;	              LV /0001
+a036 01ae		;	              JP ERROR        ;
 
-804c 3002		;	              LV /0002        ; se nao foi erro
-a04e 00d0		;	              JP ERROR        ;
+a038 a1b6		;	GET_JOB_ST    SC GET_DATA     ; pega o segundo dado (Expected JB)
+a03a 5008		;	              -  C_JB         ; 
+a03c 1042		;	              JZ GET_JOB_EOL  ; se é JB vai para CMD, se nao, imprime erro e para
+803e 3001		;	              LV /0001
+a040 01ae		;	              JP ERROR        ;
 
-d050 8014		;	DO_THE_DUMP   LD CINCO        ; zerando o contador
-a052 9014		;	              MM DU_CNT       ; 
-a054 0060		;	              JP DU_LOOP      ; (nao precisa checar db spaces agora)
+a042 a1b6		;	GET_JOB_EOL   SC GET_DATA
+a044 5002		;	              -  C_EOL        ; ve se é fim de linha, se sim pega o dado de novo
+a046 104c		;	              JZ GET_CMD      ;
+8048 3001		;	              LV /0001
+a04a 01ae		;	              JP ERROR
 
-a056 a0d8		;	DU_PRE_LOOP   SC GET_DATA     ;
-a058 5004		;	              -  C_DB_SP      ; checa se o proximo 
-a05a 1060		;	              JZ DU_LOOP
-805c 3003		;	              LV /0003
-a05e 00d0		;	              JP ERROR
+a04c a1b6		;	GET_CMD       SC GET_DATA     ; checa double slash
+a04e 5000		;	              -  C_DB_SLASH   ;
+a050 1056		;	              JZ GET_CMD_2    ;
+8052 3002		;	              LV /0002        ;
+a054 01ae		;	              JP ERROR        ;
 
-a060 a0d8		;	DU_LOOP       SC GET_DATA     ; comeca a pegar os dados do dump
-d062 a008		;	              SC CHTOUI       ; transforma de ascii para bin (EX: 3233 -> 0023)
-d064 9009		;	              MM DP1          ; 
-a066 a0d8		;	              SC GET_DATA     ; pega a segunda parte do dado
-d068 a008		;	              SC CHTOUI       ; transforma de ascii para bin
-d06a 9010		;	              MM DP2          ; 
-d06c a012		;	              SC PACK         ; palavra no acumulador (e em DP3)
+a056 a1b6		;	GET_CMD_2     SC GET_DATA     ; pega nome do comando
+a058 9016		;	              MM VARTMP       ; vai para DUMP 
+a05a 500a		;	              -  C_DU         ; 
+a05c 106e		;	              JZ GET_DU_EOL   ;
 
-a06e 8014		;	              LD DU_CNT       ;
-d070 5014		;	              -  CINCO
-a072 1084		;	              JZ DU_1_PRM
-d074 4013		;	              +  UM
-a076 1090		;	              JZ DU_2_PRM
-d078 4013		;	              +  UM
-a07a 109c		;	              JZ DU_3_PRM
-d07c 4013		;	              +  UM
-a07e 10a8		;	              JZ DU_4_PRM
-d080 4013		;	              +  UM
-a082 10b4		;	              JZ DU_5_PRM
+a05e 8016		;	              LD VARTMP       ; vai para o LOAD
+a060 500c		;	              -  C_LO         ;
+a062 1078		;	              JZ GET_LO_EOL   ; 
 
-a084 8014		;	DU_1_PRM      LD DU_CNT
-d086 5013		;	              -  UM 
-a088 9014		;	              MM DU_CNT
-d08a 8011		;	              LD DP3          ; a palavra a ser salva
-d08c 9004		;	              MM DUMP_BL     ; salva no parametro tamanho do dump
-a08e 0056		;	              JP DU_PRE_LOOP      ;
+a064 8016		;	              LD VARTMP       ; vai para o CLEAR
+a066 500e		;	              -  C_CL         ;
+a068 1082		;	              JZ GET_CL_EOL   ;
 
-a090 8014		;	DU_2_PRM      LD DU_CNT
-d092 5013		;	              -  UM 
-a094 9014		;	              MM DU_CNT
-d096 8011		;	              LD DP3          ; a palavra a ser salva
-d098 9001		;	              MM DUMP_INI     ; salva no parametro endereco inicial do dump
-a09a 0056		;	              JP DU_PRE_LOOP      ;
+806a 3002		;	              LV /0002        ; se nao, foi erro de comando
+a06c 01ae		;	              JP ERROR        ;
 
-a09c 8014		;	DU_3_PRM      LD DU_CNT
-d09e 5013		;	              -  UM 
-a0a0 9014		;	              MM DU_CNT
-d0a2 8011		;	              LD DP3          ; a palavra a ser salva
-d0a4 9002		;	              MM DUMP_TAM     ; salva no parametro tamanho do dump
-a0a6 0056		;	              JP DU_PRE_LOOP      ;
+a06e a1b6		;	GET_DU_EOL    SC GET_DATA
+a070 5002		;	              -  C_EOL        ; ve se é fim de linha, se sim pega os parametros
+a072 108c		;	              JZ DO_THE_DUMP  ;
+8074 3002		;	              LV /0002
+a076 01ae		;	              JP ERROR
 
-a0a8 8014		;	DU_4_PRM      LD DU_CNT
-d0aa 5013		;	              -  UM 
-a0ac 9014		;	              MM DU_CNT
-d0ae 8011		;	              LD DP3          ; a palavra a ser salva
-d0b0 9005		;	              MM DUMP_EXE     ; salva no parametro tamanho do dump
-a0b2 0056		;	              JP DU_PRE_LOOP      ;
+a078 a1b6		;	GET_LO_EOL    SC GET_DATA
+a07a 5002		;	              -  C_EOL        ; ve se é fim de linha, se sim pega os parametros
+a07c 1100		;	              JZ DO_THE_LOAD  ;
+807e 3002		;	              LV /0002
+a080 01ae		;	              JP ERROR
 
-d0b4 8011		;	DU_5_PRM      LD DP3              ; a palavra a ser salva
-d0b6 9003		;	              MM DUMP_UL          ; salva no parametro tamanho do dump
-d0b8 a000		;	              SC DUMPER           ; chama subrotina de dump
-a0ba 0034		;	              JP GET_CMD          ; volta a area de comandos
+a082 a1b6		;	GET_CL_EOL    SC GET_DATA
+a084 5002		;	              -  C_EOL        ; ve se é fim de linha, se sim pega os parametros
+a086 111c		;	              JZ DO_THE_CLEAR ;
+8088 3002		;	              LV /0002
+a08a 01ae		;	              JP ERROR
+
+d08c 8015		;	DO_THE_DUMP   LD CINCO        ; zerando o contador
+a08e 901a		;	              MM DU_CNT       ; 
+a090 009c		;	              JP DU_LOOP      ; (nao precisa checar db spaces agora) (1 parametro)
+
+a092 a1b6		;	DU_PRE_LOOP   SC GET_DATA     ;
+a094 5004		;	              -  C_DB_SP      ; checa se o proximo 
+a096 109c		;	              JZ DU_LOOP
+8098 3003		;	              LV /0003
+a09a 01ae		;	              JP ERROR
+
+a09c a1b6		;	DU_LOOP       SC GET_DATA     ; comeca a pegar os dados do dump
+d09e a008		;	              SC CHTOUI       ; transforma de ascii para bin (EX: 3034 -> 0004)
+d0a0 9009		;	              MM DP1          ; 
+a0a2 a1b6		;	              SC GET_DATA     ; pega a segunda parte do dado
+d0a4 a008		;	              SC CHTOUI       ; transforma de ascii para bin (Ex: 3030 -> 0000)
+d0a6 9010		;	              MM DP2          ; 
+d0a8 a012		;	              SC PACK         ; junta as palavras e rotorna
+                              ; no acumulador (e em DP3) (Ex: PACK(0004,0000) = 0400)
+
+a0aa 801a		;	              LD DU_CNT       ; descobre qual arguento é e 
+                              ; salva no respectivo parametro do dump
+d0ac 5015		;	              -  CINCO
+a0ae 10c0		;	              JZ DU_1_PRM
+d0b0 4013		;	              +  UM
+a0b2 10cc		;	              JZ DU_2_PRM
+d0b4 4013		;	              +  UM
+a0b6 10d8		;	              JZ DU_3_PRM
+d0b8 4013		;	              +  UM
+a0ba 10e4		;	              JZ DU_4_PRM
+d0bc 4013		;	              +  UM
+a0be 10f0		;	              JZ DU_5_PRM
+
+a0c0 801a		;	DU_1_PRM      LD DU_CNT
+d0c2 5013		;	              -  UM 
+a0c4 901a		;	              MM DU_CNT
+d0c6 8011		;	              LD DP3          ; a palavra a ser salva
+d0c8 9004		;	              MM DUMP_BL      ; salva no parametro tamanho bloco do dump
+a0ca 0092		;	              JP DU_PRE_LOOP  ;
+
+a0cc 801a		;	DU_2_PRM      LD DU_CNT
+d0ce 5013		;	              -  UM 
+a0d0 901a		;	              MM DU_CNT
+d0d2 8011		;	              LD DP3          ; a palavra a ser salva
+d0d4 9001		;	              MM DUMP_INI     ; salva no parametro endereco inicial do dump
+a0d6 0092		;	              JP DU_PRE_LOOP  ;
+
+a0d8 801a		;	DU_3_PRM      LD DU_CNT
+d0da 5013		;	              -  UM 
+a0dc 901a		;	              MM DU_CNT
+d0de 8011		;	              LD DP3          ; a palavra a ser salva
+d0e0 9002		;	              MM DUMP_TAM     ; salva no parametro tamanho total do dump
+a0e2 0092		;	              JP DU_PRE_LOOP  ;
+
+a0e4 801a		;	DU_4_PRM      LD DU_CNT
+d0e6 5013		;	              -  UM 
+a0e8 901a		;	              MM DU_CNT
+d0ea 8011		;	              LD DP3          ; a palavra a ser salva
+d0ec 9005		;	              MM DUMP_EXE     ; salva no parametro endereco executavel do dump
+a0ee 0092		;	              JP DU_PRE_LOOP  ;
+
+d0f0 8011		;	DU_5_PRM      LD DP3          ; a palavra a ser salva
+d0f2 9003		;	              MM DUMP_UL      ; salva no parametro UL do dump
+d0f4 a000		;	              SC DUMPER       ; chama subrotina de dump
+a0f6 a1b6		;	              SC GET_DATA
+a0f8 5002		;	              -  C_EOL        ; ve se é fim de linha, se sim pega o proximo comando
+a0fa 104c		;	              JZ GET_CMD 
+80fc 3006		;	              LV /0006        ; (cmd not found)
+a0fe 01ae		;	              JP ERROR        ; volta a area de comandos
 
 
-a0bc a0d8		;	DO_THE_LOAD   SC GET_DATA     ; comeca a pegar os dados do dump
-d0be a008		;	              SC CHTOUI       ; transforma de ascii para bin (EX: 3233 -> 0023)
-d0c0 9009		;	              MM DP1          ; 
-a0c2 a0d8		;	              SC GET_DATA     ; pega a segunda parte do dado
-d0c4 a008		;	              SC CHTOUI       ; transforma de ascii para bin
-d0c6 9010		;	              MM DP2          ; 
-d0c8 a012		;	              SC PACK         ; palavra no acumulador (e em DP3)
-d0ca 9007		;	              MM LOADER_UL        ; salva no loader UL 
-d0cc a006		;	              SC LOADER           ; ihaaaa
-a0ce 0034		;	              JP GET_CMD          ;
+a100 a1b6		;	DO_THE_LOAD   SC GET_DATA     ; comeca a pegar os dados do load
+d102 a008		;	              SC CHTOUI       ; transforma de ascii para bin (EX: 3030 -> 0000)
+d104 9009		;	              MM DP1          ; 
+a106 a1b6		;	              SC GET_DATA     ; pega a segunda parte do dado
+d108 a008		;	              SC CHTOUI       ; transforma de ascii para bin (Ex: 3031 -> 0001)
+d10a 9010		;	              MM DP2          ; 
+d10c a012		;	              SC PACK         ; junta as palavras e rotorna
+                              ; no acumulador (e em DP3) (Ex: PACK(0000,0001) = 0001)
+d10e 9007		;	              MM LOADER_UL    ; salva no loader UL 
+d110 a006		;	              SC LOADER       ; ihaaaa
+a112 a1b6		;	              SC GET_DATA
+a114 5002		;	              -  C_EOL        ; ve se é fim de linha, se sim pega o proximo comando
+a116 104c		;	              JZ GET_CMD      ;
+8118 3006		;	              LV /0006
+a11a 01ae		;	              JP ERROR 
 
-a0d0 00d4		;	ERROR         JP SHOW_ERROR 
-80d2 0001		;	              K  /0001        ; numero da ul do erro * (so por ser preciso passar um parametro)
-80d4 f0ee		;	SHOW_ERROR    OS /00EE        ; chama a mensagem de erro
+a11c 319a		;	DO_THE_CLEAR  LV CALL_CL_OS   ; pega o endereco onde serao salvos os argumentos do OS
+a11e 9012		;	              MM CL_CUR_ADD   ;
+8120 3000		;	              LV /0000        ; reseting count
+a122 9022		;	              MM CL_PARAMS_CNT ;
+a124 a1b6		;	              SC GET_DATA     ; pega o primeiro nibble do primeiro parametro
+a126 9016		;	              MM VARTMP
+a128 5002		;	              -  C_EOL        ; se for fim de linha, nenhum parametro foi passado, show error
+a12a 112e		;	              JZ CL_PARAM_ERR ;
+a12c 0132		;	              JP CL_LOOP      ; se nao vai para o loop de gt params
+812e 3006		;	CL_PARAM_ERR  LV /0006
+a130 01ae		;	              JP ERROR
 
-a0d6 b018		;	FIM           RS BATCH        ; retorna
+a132 8016		;	CL_LOOP       LD VARTMP       ;
+d134 a008		;	              SC CHTOUI       ; transforma de ascii para bin (EX: 3030 -> 0000)
+d136 9009		;	              MM DP1          ; 
+a138 a1b6		;	              SC GET_DATA     ; pega a segunda parte do dado
+d13a a008		;	              SC CHTOUI       ; transforma de ascii para bin (Ex: 3031 -> 0001)
+d13c 9010		;	              MM DP2          ; 
+d13e a012		;	              SC PACK         ; junta as palavras e rotorna
+                              ; no acumulador (e em DP3) (Ex: PACK(0000,0001) = 0001)
+a140 8012		;	              LD CL_CUR_ADD   ; gera funcao de salvar o argumento no endereco certo
+a142 401e		;	              +  SAVE         ;
+a144 9148		;	              MM SV_CL_PARAM  ;
+d146 8011		;	              LD DP3          ;
+8148 0000		;	SV_CL_PARAM   K  /0000        ; salva o dado no argumento do OS
+a14a 8022		;	              LD CL_PARAMS_CNT ;
+d14c 4013		;	              +  UM 
+a14e 9022		;	              MM CL_PARAMS_CNT ; incrementando contagens (n de parametros)
+a150 5020		;	              -  CL_N_PARAMS
+a152 112e		;	              JZ CL_PARAM_ERR  ;
+a154 8012		;	              LD CL_CUR_ADD    ; incrementando contagens (endereco do prox parametro)
+d156 4014		;	              +  DOIS
+a158 9012		;	              MM CL_CUR_ADD    ;
+a15a a1b6		;	              SC GET_DATA      ; ve se é fim de linha, se sim pacabaram os parametros
+a15c 9016		;	              MM VARTMP
+a15e 5002		;	              -  C_EOL         
+a160 1172		;	              JZ CL_END        ; pula para a parte final do CL
+a162 8016		;	              LD VARTMP        ;
+a164 5004		;	              -  C_DB_SP       ; veio espaco, é esperado um proximo parametro
+a166 116c		;	              JZ GET_NT_PRM    ;
+8168 3003		;	              LV /0003
+a16a 01ae		;	              JP ERROR         ; pega proximo parametro
+a16c a1b6		;	GET_NT_PRM    SC GET_DATA      ;
+a16e 9016		;	              MM VARTMP        ;
+a170 0132		;	              JP CL_LOOP
 
-80d8 0000		;	GET_DATA      JP /0000        ; inicio da rotina de GD 
-80da 0000		;	S_GET_DATA    K  /0000        ; precisa ser previamente salvo com o comando de GD na UL certa
-a0dc 9010		;	              MM VARTMP       ; salva na variavel temporaria
-a0de 5002		;	              -  C_EOL        ; ve se é fim de linha, se sim pega o dado de novo
-a0e0 10da		;	              JZ S_GET_DATA   ;
-a0e2 8010		;	              LD VARTMP       ; recarrega o dado carregado
-a0e4 5006		;	              -  C_EOF        ;
-a0e6 10d6		;	              JZ FIM          ; retorna a sub rotina do batch caso seja fim do arquivo
-a0e8 8010		;	              LD VARTMP       ;
-a0ea b0d8		;	              RS GET_DATA     ;
+a172 8022		;	CL_END        LD CL_PARAMS_CNT ;   (Ex: 0004, se forem 4 parametros) 
+a174 601c		;	              *  DCSEIS        ;   (Ex: 0400)
+a176 4014		;	              +  CL_OS         ; formou a operacao de chamar o OS (Ex: F4C0)
+a178 9016		;	              MM VARTMP        ;
+a17a 8012		;	              LD CL_CUR_ADD    ;   (Ex: 0192)
+a17c 401e		;	              +  SAVE          ; formou operacao se salvar (Ex: 9192)
+a17e 9190		;	              MM CL_OS_SAVE    ; 
+a180 8012		;	              LD CL_CUR_ADD    ; formando operacao de ir para o get_cmd apos o OS (Ex: 0192)
+d182 4014		;	              +  DOIS          ; Ex: 0194
+a184 9012		;	              MM CL_CUR_ADD    ; 
+a186 401e		;	              +  SAVE          ; Ex: 9194
+a188 918c		;	              MM CL_TO_CMD     ;
+a18a 304c		;	              LV GET_CMD       ;
+818c 0000		;	CL_TO_CMD     K  /0000         ; salvou no endereco apos a execucao do OS um comando
+                               ; um comando para pular para o GET_CMD, reiniciando o loop
+a18e 8016		;	              LD VARTMP        ; (contem a chamada de OS -> Ex: F4C0)
+8190 0000		;	CL_OS_SAVE    K  /0000         ;
+a192 8012		;	              LD CL_CUR_ADD    ; volta o endereco de execucao para estar na chamada de OS
+d194 5014		;	              -  DOIS          ;
+a196 9012		;	              MM CL_CUR_ADD    ; pegou o endereco da operacao de OS de novo
+a198 0012		;	              JP CL_CUR_ADD    ; pula vai para este endereco, que efetuara a chamada de OS
+
+819a 0000		;	CALL_CL_OS    $ =10            ; guarda 10 enderecos, 9 de parametros e 1 para pular   0
+819c 0000		;	CALL_CL_OS    $ =10            ; guarda 10 enderecos, 9 de parametros e 1 para pular   2
+819e 0000		;	CALL_CL_OS    $ =10            ; guarda 10 enderecos, 9 de parametros e 1 para pular   4
+81a0 0000		;	CALL_CL_OS    $ =10            ; guarda 10 enderecos, 9 de parametros e 1 para pular   6
+81a2 0000		;	CALL_CL_OS    $ =10            ; guarda 10 enderecos, 9 de parametros e 1 para pular   8
+81a4 0000		;	CALL_CL_OS    $ =10            ; guarda 10 enderecos, 9 de parametros e 1 para pular   a
+81a6 0000		;	CALL_CL_OS    $ =10            ; guarda 10 enderecos, 9 de parametros e 1 para pular   c
+81a8 0000		;	CALL_CL_OS    $ =10            ; guarda 10 enderecos, 9 de parametros e 1 para pular   e
+81aa 0000		;	CALL_CL_OS    $ =10            ; guarda 10 enderecos, 9 de parametros e 1 para pular   10
+81ac 0000		;	CALL_CL_OS    $ =10            ; guarda 10 enderecos, 9 de parametros e 1 para pular   12
+				;	CALL_CL_OS    $ =10            ; guarda 10 enderecos, 9 de parametros e 1 para pular
+                               ; de volta ao GET_CMD
+              
+
+a1ae 01b2		;	ERROR         JP SHOW_ERROR 
+81b0 0001		;	              K  /0001        ; numero da ul do erro * (so por ser preciso passar um parametro)
+81b2 f0ee		;	SHOW_ERROR    OS /00EE        ; chama a mensagem de erro
+
+a1b4 b026		;	FIM           RS BATCH        ; retorna
+
+81b6 0000		;	GET_DATA      JP /0000        ; inicio da rotina de GD 
+81b8 0000		;	S_GET_DATA    K  /0000        ; precisa ser previamente salvo com o comando de GD na UL certa
+a1ba 9016		;	              MM VARTMP       ; salva na variavel temporaria
+a1bc 5006		;	              -  C_EOF        ;
+a1be 11b4		;	              JZ FIM          ; retorna a sub rotina do batch caso seja fim do arquivo
+a1c0 8016		;	              LD VARTMP       ;
+a1c2 b1b6		;	              RS GET_DATA     ;
 

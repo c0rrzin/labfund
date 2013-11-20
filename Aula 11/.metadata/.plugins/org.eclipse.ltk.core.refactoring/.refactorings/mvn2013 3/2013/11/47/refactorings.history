@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring accessors="true" comment="Delete 7 elements from project &apos;mvn2013 3&apos;&#x0A;- Original project: &apos;mvn2013 3&apos;&#x0A;- Original elements:&#x0A;     batch.txt&#x0A;     disco0.bin&#x0A;     disp.lst&#x0A;     erasable.bin&#x0A;     final_relocado.mvn&#x0A;     final_relocado.run&#x0A;     notErasable.bin" description="Delete elements" element1="final_relocado.mvn" element2="disco0.bin" element3="notErasable.bin" element4="erasable.bin" element5="final_relocado.run" element6="disp.lst" element7="batch.txt" elements="0" flags="589830" id="org.eclipse.jdt.ui.delete" resources="7" stamp="1384951681330" subPackages="false" version="1.0"/>
+</session>

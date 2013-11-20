@@ -1,0 +1,20 @@
+!SESSION 2013-11-18 17:44:05.716 -----------------------------------------------
+eclipse.buildId=v22.0.1-685705
+java.version=1.6.0_65
+java.vendor=Apple Inc.
+BootLoader constants: OS=macosx, ARCH=x86_64, WS=cocoa, NL=pt_BR
+Framework arguments:  -product com.android.ide.eclipse.adt.package.product -product com.android.ide.eclipse.adt.package.product -keyring /Users/thalescantafaro/.eclipse_keyring -showlocation
+Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -product com.android.ide.eclipse.adt.package.product -data /Users/thalescantafaro/3-Quadrimestre/PCS 2024 - Lab Fund/labfund/Aula 11 -product com.android.ide.eclipse.adt.package.product -keyring /Users/thalescantafaro/.eclipse_keyring -showlocation
+
+!ENTRY org.eclipse.ui 4 4 2013-11-18 18:42:24.255
+!MESSAGE Referenced part does not exist yet: org.eclipse.ui.views.ProblemView.
+!SESSION 2013-11-18 22:24:08.763 -----------------------------------------------
+eclipse.buildId=v22.0.1-685705
+java.version=1.6.0_65
+java.vendor=Apple Inc.
+BootLoader constants: OS=macosx, ARCH=x86_64, WS=cocoa, NL=pt_BR
+Framework arguments:  -product com.android.ide.eclipse.adt.package.product -product com.android.ide.eclipse.adt.package.product -keyring /Users/thalescantafaro/.eclipse_keyring -showlocation
+Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -product com.android.ide.eclipse.adt.package.product -data /Users/thalescantafaro/3-Quadrimestre/PCS 2024 - Lab Fund/labfund/Aula 11 -product com.android.ide.eclipse.adt.package.product -keyring /Users/thalescantafaro/.eclipse_keyring -showlocation
+
+!ENTRY org.eclipse.core.net 1 0 2013-11-18 22:24:22.019
+!MESSAGE System property http.nonProxyHosts has been set to local|*.local|169.254/16|*.169.254/16 by an external source. This value will be overwritten using the values from the preferences
